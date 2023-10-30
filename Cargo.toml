@@ -5,8 +5,38 @@ edition = "2021"
 
 [dependencies]
 bevy = { version = "0.11.0", default-features = false }
-bevy_tweening = "0.8.0"
+bevy_tweening = { version = "0.8.0", optional = true }
 
 [features]
-client = []
-server = []
+client = [
+  "dep:bevy_tweening",
+  "bevy/animation",
+  "bevy/bevy_animation",
+  "bevy/bevy_asset",
+  "bevy/bevy_audio",
+  "bevy/bevy_core_pipeline",
+  "bevy/bevy_gilrs",
+  "bevy/bevy_gizmos",
+  "bevy/bevy_gltf",
+  "bevy/bevy_pbr",
+  "bevy/bevy_render",
+  "bevy/bevy_scene",
+  "bevy/bevy_sprite",
+  "bevy/bevy_text",
+  "bevy/bevy_ui",
+  "bevy/bevy_winit",
+  "bevy/hdr",
+  "bevy/ktx2",
+  "bevy/multi-threaded",
+  "bevy/png",
+  "bevy/tonemapping_luts",
+  "bevy/vorbis",
+  "bevy/x11",
+  "bevy/zstd",
+]
+server = ["bevy/multi-threaded"]
+dynamic = ["bevy/dynamic_linking"]
+
+[[example]]
+name = "simple"
+required-features = ["client"]
