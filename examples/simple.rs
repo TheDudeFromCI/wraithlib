@@ -1,5 +1,6 @@
 use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
+use wraithlibrary::splash::{SplashImageProperties, SplashPlugin};
 use wraithlibrary::ClientPlugins;
 
 fn main() {
@@ -22,6 +23,12 @@ fn main() {
                     ..default()
                 }),
         )
-        .add_plugins(ClientPlugins)
+        .add_plugins(ClientPlugins.set(SplashPlugin {
+            images: vec![SplashImageProperties {
+                path: "images/wraithaven.png".into(),
+                ..default()
+            }],
+            ..default()
+        }))
         .run();
 }
