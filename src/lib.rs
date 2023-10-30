@@ -4,13 +4,24 @@ use bevy::prelude::*;
 pub mod gamestates;
 
 #[cfg(feature = "client")]
+pub mod ui_animations;
+
+#[cfg(feature = "client")]
+pub mod splash;
+
+#[cfg(feature = "client")]
 #[derive(Debug, Default)]
 pub struct ClientPlugins;
 impl PluginGroup for ClientPlugins {
     fn build(self) -> PluginGroupBuilder {
-        use gamestates::client::ClientGameStatePlugin;
+        use crate::gamestates::client::ClientGameStatePlugin;
+        use crate::splash::SplashPlugin;
+        use crate::ui_animations::UiAnimationsPlugin;
 
-        PluginGroupBuilder::start::<Self>().add(ClientGameStatePlugin)
+        PluginGroupBuilder::start::<Self>()
+            .add(ClientGameStatePlugin)
+            .add(UiAnimationsPlugin)
+            .add(SplashPlugin::default())
     }
 }
 
