@@ -1,7 +1,7 @@
 use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
-use wraithlibrary::client::splash::{SplashImageProperties, SplashPlugin};
-use wraithlibrary::client::ClientPlugins;
+use wraithlib::client::splash::{SplashImageProperties, SplashPlugin};
+use wraithlib::client::ClientPlugins;
 
 fn main() {
     App::new()
