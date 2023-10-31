@@ -1,11 +1,13 @@
 use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
+use wraithlib::client::loading_screen::{LoadingScreenPlugin, LoadingScreenProperties};
 use wraithlib::client::main_menu::{MainMenuPlugin, MainMenuProperties};
 use wraithlib::client::splash::{SplashImageProperties, SplashPlugin};
 use wraithlib::client::ClientPlugins;
 
 fn main() {
     App::new()
+        .insert_resource(ClearColor(Color::BLACK))
         .add_plugins(
             DefaultPlugins
                 .set(LogPlugin {
@@ -39,6 +41,12 @@ fn main() {
                         server_list_img_path: Some("images/menu/serverlist.png".into()),
                         settings_img_path: Some("images/menu/settings.png".into()),
                         single_player_img_path: Some("images/menu/singleplayer.png".into()),
+                    },
+                })
+                .set(LoadingScreenPlugin {
+                    properties: LoadingScreenProperties {
+                        path: Some("images/loading.png".into()),
+                        ..default()
                     },
                 }),
         )

@@ -3,6 +3,7 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy_tweening::{Animator, Delay};
 
+use super::loading_screen::{is_not_loading, TransitionToState};
 use crate::client::gamestates::ClientGameState;
 use crate::client::ui_animations::{BackgroundColorLens, FadeInOut};
 
@@ -24,7 +25,12 @@ impl Plugin for SplashPlugin {
         })
         .add_systems(OnEnter(ClientGameState::Splash), build_splash)
         .add_systems(OnExit(ClientGameState::Splash), cleanup)
-        .add_systems(Update, exit_state.run_if(in_state(ClientGameState::Splash)));
+        .add_systems(
+            Update,
+            exit_state
+                .run_if(in_state(ClientGameState::Splash))
+                .run_if(is_not_loading),
+        );
     }
 }
 
@@ -156,10 +162,12 @@ fn cleanup(view: Query<Entity, With<SplashImageView>>, mut commands: Commands) {
 fn exit_state(
     time: Res<Time>,
     splash_view: Query<&SplashImageView>,
-    mut state: ResMut<NextState<ClientGameState>>,
+    mut transition_evs: EventWriter<TransitionToState>,
 ) {
     let end_time = splash_view.single().end_time;
     if time.elapsed_seconds() > end_time {
-        state.set(ClientGameState::MainMenu);
+        transition_evs.send(TransitionToState {
+            state: ClientGameState::MainMenu,
+        });
     }
 }

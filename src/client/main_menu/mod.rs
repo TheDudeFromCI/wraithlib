@@ -10,7 +10,7 @@ pub use components::*;
 pub use events::*;
 pub use resources::*;
 
-use super::gamestates::ClientGameState;
+use crate::client::gamestates::ClientGameState;
 
 #[derive(Debug, Default)]
 pub struct MainMenuPlugin {
