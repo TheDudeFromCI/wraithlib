@@ -1,15 +1,15 @@
 use bevy::prelude::*;
 
 mod components;
+mod conditions;
 mod events;
 mod resources;
 mod systems;
 
 pub use components::*;
+pub use conditions::*;
 pub use events::*;
 pub use resources::*;
-
-use self::systems::condition_is_done_loading;
 
 #[derive(Debug, Default)]
 pub struct LoadingScreenPlugin {

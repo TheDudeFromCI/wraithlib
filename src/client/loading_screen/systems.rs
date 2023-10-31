@@ -177,14 +177,3 @@ pub(super) fn clear_loading_screen(
         commands.entity(entity).despawn_recursive();
     }
 }
-
-pub(super) fn condition_is_done_loading(
-    time: Res<Time>,
-    mut local_time: Local<Option<f32>>,
-) -> bool {
-    if local_time.is_none() {
-        *local_time = Some(time.elapsed_seconds() + 5.0);
-    }
-
-    time.elapsed_seconds() > local_time.unwrap()
-}

@@ -34,7 +34,3 @@ pub enum LoadingState {
     Loading,
     FinishingLoad,
 }
-
-pub fn is_not_loading(state: Res<State<LoadingState>>) -> bool {
-    **state == LoadingState::None
-}
