@@ -3,83 +3,12 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy_tweening::{Animator, Delay};
 
-use super::loading_screen::{is_not_loading, TransitionToState};
 use crate::client::gamestates::ClientGameState;
+use crate::client::loading_screen::TransitionToState;
+use crate::client::splash::{SplashImageView, SplashImages};
 use crate::client::ui_animations::{BackgroundColorLens, FadeInOut};
 
-#[derive(Debug)]
-pub struct SplashPlugin {
-    pub images: Vec<SplashImageProperties>,
-    pub start_delay: f32,
-    pub end_delay: f32,
-    pub delay_between: f32,
-}
-
-impl Plugin for SplashPlugin {
-    fn build(&self, app: &mut App) {
-        app.insert_resource(SplashImages {
-            images: self.images.clone(),
-            start_delay: self.start_delay,
-            end_delay: self.end_delay,
-            delay_between: self.delay_between,
-        })
-        .add_systems(OnEnter(ClientGameState::Splash), build_splash)
-        .add_systems(OnExit(ClientGameState::Splash), cleanup)
-        .add_systems(
-            Update,
-            exit_state
-                .run_if(in_state(ClientGameState::Splash))
-                .run_if(is_not_loading),
-        );
-    }
-}
-
-impl Default for SplashPlugin {
-    fn default() -> Self {
-        Self {
-            images: vec![SplashImageProperties::default()],
-            start_delay: 1.0,
-            end_delay: 0.5,
-            delay_between: 0.5,
-        }
-    }
-}
-
-#[derive(Debug, Default, Resource)]
-pub struct SplashImages {
-    pub images: Vec<SplashImageProperties>,
-    pub start_delay: f32,
-    pub end_delay: f32,
-    pub delay_between: f32,
-}
-
-#[derive(Debug, Clone)]
-pub struct SplashImageProperties {
-    pub path: String,
-    pub scale: f32,
-    pub fade_in_duration: f32,
-    pub display_duration: f32,
-    pub fade_out_duration: f32,
-}
-
-impl Default for SplashImageProperties {
-    fn default() -> Self {
-        Self {
-            path: "splash.png".into(),
-            scale: 0.75,
-            fade_in_duration: 0.5,
-            display_duration: 1.5,
-            fade_out_duration: 0.5,
-        }
-    }
-}
-
-#[derive(Debug, Component)]
-struct SplashImageView {
-    end_time: f32,
-}
-
-fn build_splash(
+pub(super) fn build_splash(
     time: Res<Time>,
     asset_server: Res<AssetServer>,
     splash_images: Res<SplashImages>,
@@ -153,13 +82,13 @@ fn build_splash(
         });
 }
 
-fn cleanup(view: Query<Entity, With<SplashImageView>>, mut commands: Commands) {
+pub(super) fn cleanup(view: Query<Entity, With<SplashImageView>>, mut commands: Commands) {
     for entity in view.iter() {
         commands.entity(entity).despawn_recursive();
     }
 }
 
-fn exit_state(
+pub(super) fn exit_state(
     time: Res<Time>,
     splash_view: Query<&SplashImageView>,
     mut transition_evs: EventWriter<TransitionToState>,
