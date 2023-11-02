@@ -14,13 +14,13 @@ use crate::client::gamestates::ClientGameState;
 
 #[derive(Debug, Default)]
 pub struct MainMenuPlugin {
-    pub properties: MainMenuProperties,
+    pub display: MainMenuProperties,
 }
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<MainMenuState>()
-            .insert_resource(self.properties.clone())
+            .insert_resource(self.display.clone())
             .add_systems(
                 OnEnter(ClientGameState::MainMenu),
                 (systems::init_main_menu, ui::build_main_menu),
