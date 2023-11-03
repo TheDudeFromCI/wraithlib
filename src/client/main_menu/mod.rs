@@ -37,6 +37,7 @@ impl Plugin for MainMenuPlugin {
                     systems::quit_button,
                     systems::back_button,
                     systems::update_screen_lerp,
+                    ui::button_hover,
                 )
                     .run_if(in_state(ClientGameState::MainMenu)),
             );

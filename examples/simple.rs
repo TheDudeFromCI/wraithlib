@@ -2,11 +2,16 @@ use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
 use wraithlib::client::loading_screen::{LoadingScreenPlugin, LoadingScreenProperties};
 use wraithlib::client::main_menu::{
+    BackButton,
     ButtonProperties,
     MainMenuProperties,
     MenuScreenProperties,
+    MultiplayerButton,
+    QuitButton,
     ServerListScreen,
+    SettingsButton,
     SettingsScreen,
+    SinglePlayerButton,
     SinglePlayerScreen,
     TitleScreen,
 };
@@ -23,21 +28,33 @@ fn main() {
                     ButtonProperties {
                         img_path: Some("images/menu/buttons/singleplayer.png".into()),
                         img_size: Vec2::new(200.0, 50.0),
+                        button_comp: Some(|cmd| {
+                            cmd.insert(SinglePlayerButton);
+                        }),
                         ..default()
                     },
                     ButtonProperties {
                         img_path: Some("images/menu/buttons/multiplayer.png".into()),
                         img_size: Vec2::new(200.0, 50.0),
+                        button_comp: Some(|cmd| {
+                            cmd.insert(MultiplayerButton);
+                        }),
                         ..default()
                     },
                     ButtonProperties {
                         img_path: Some("images/menu/buttons/settings.png".into()),
                         img_size: Vec2::new(200.0, 50.0),
+                        button_comp: Some(|cmd| {
+                            cmd.insert(SettingsButton);
+                        }),
                         ..default()
                     },
                     ButtonProperties {
                         img_path: Some("images/menu/buttons/quit.png".into()),
                         img_size: Vec2::new(200.0, 50.0),
+                        button_comp: Some(|cmd| {
+                            cmd.insert(QuitButton);
+                        }),
                         ..default()
                     },
                 ],
@@ -51,6 +68,9 @@ fn main() {
                     buttons: vec![ButtonProperties {
                         img_path: Some("images/menu/buttons/back.png".into()),
                         img_size: Vec2::new(200.0, 50.0),
+                        button_comp: Some(|cmd| {
+                            cmd.insert(BackButton);
+                        }),
                         ..default()
                     }],
                     screen_comp: Some(|cmd| {
@@ -62,6 +82,9 @@ fn main() {
                     buttons: vec![ButtonProperties {
                         img_path: Some("images/menu/buttons/back.png".into()),
                         img_size: Vec2::new(200.0, 50.0),
+                        button_comp: Some(|cmd| {
+                            cmd.insert(BackButton);
+                        }),
                         ..default()
                     }],
                     screen_comp: Some(|cmd| {
@@ -73,6 +96,9 @@ fn main() {
                     buttons: vec![ButtonProperties {
                         img_path: Some("images/menu/buttons/back.png".into()),
                         img_size: Vec2::new(200.0, 50.0),
+                        button_comp: Some(|cmd| {
+                            cmd.insert(BackButton);
+                        }),
                         ..default()
                     }],
                     screen_comp: Some(|cmd| {

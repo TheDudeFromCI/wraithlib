@@ -1,3 +1,5 @@
+#![allow(clippy::type_complexity)]
+
 #[cfg(feature = "client")]
 pub mod client;
 

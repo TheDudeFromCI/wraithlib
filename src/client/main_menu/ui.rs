@@ -22,6 +22,22 @@ pub(super) fn cleanup(ui: Query<Entity, With<MainMenuUI>>, mut commands: Command
     }
 }
 
+pub(super) fn button_hover(
+    mut ui: Query<(&Interaction, &mut BackgroundColor), (Changed<Interaction>, With<Button>)>,
+) {
+    for (interaction, mut color) in ui.iter_mut() {
+        match *interaction {
+            Interaction::Hovered => {
+                *color = Color::rgba(0.75, 0.75, 0.75, 1.0).into();
+            }
+            Interaction::None => {
+                *color = Color::rgba(1.0, 1.0, 1.0, 1.0).into();
+            }
+            _ => {}
+        }
+    }
+}
+
 fn spawn_screen(
     asset_server: &Res<AssetServer>,
     properties: &MenuScreenProperties,
@@ -38,19 +54,21 @@ fn spawn_screen(
         ..default()
     };
 
+    let alpha = if z_index == 0 { 1.0 } else { 0.0 };
+
     let mut cmd = commands.spawn((
         MainMenuUI,
         match &properties.bg_img_path {
             Some(path) => ImageBundle {
                 style: bg_style,
                 image: asset_server.load(path).into(),
-                background_color: Color::rgba(1.0, 1.0, 1.0, 0.0).into(),
+                background_color: Color::rgba(1.0, 1.0, 1.0, alpha).into(),
                 z_index: ZIndex::Global(z_index),
                 ..default()
             },
             None => ImageBundle {
                 style: bg_style,
-                background_color: Color::rgba(0.0, 0.0, 0.0, 0.0).into(),
+                background_color: Color::rgba(0.0, 0.0, 0.0, alpha).into(),
                 z_index: ZIndex::Global(z_index),
                 ..default()
             },
