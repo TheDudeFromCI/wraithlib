@@ -1,54 +1,24 @@
+use bevy::ecs::system::EntityCommands;
 use bevy::prelude::*;
 
-#[derive(Debug, Default, States, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum MainMenuState {
-    #[default]
-    TitleScreen,
-    SinglePlayer,
-    ServerList,
-    Settings,
-}
-
-#[derive(Debug, Default, Resource, Clone)]
+#[derive(Default, Resource)]
 pub struct MainMenuProperties {
-    pub title_screen: TitleScreenProperties,
-    pub single_player_screen: Option<SinglePlayerScreenProperties>,
-    pub server_list_screen: Option<ServerListScreenProperties>,
-    pub settings_screen: Option<SettingsScreenProperties>,
+    pub root_screen: MenuScreenProperties,
+    pub child_screens: Vec<MenuScreenProperties>,
 }
 
-#[derive(Debug, Default, Clone)]
-pub struct TitleScreenProperties {
+#[derive(Default)]
+pub struct MenuScreenProperties {
     pub bg_img_path: Option<String>,
-    pub single_player_btn: Option<ButtonProperties>,
-    pub server_list_btn: Option<ButtonProperties>,
-    pub settings_btn: Option<ButtonProperties>,
-    pub quit_btn: Option<ButtonProperties>,
+    pub buttons: Vec<ButtonProperties>,
+    pub screen_comp: Option<fn(&mut EntityCommands)>,
 }
 
-#[derive(Debug, Default, Clone)]
-pub struct SinglePlayerScreenProperties {
-    pub bg_img_path: Option<String>,
-    pub back_btn: Option<ButtonProperties>,
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct ServerListScreenProperties {
-    pub bg_img_path: Option<String>,
-    pub back_btn: Option<ButtonProperties>,
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct SettingsScreenProperties {
-    pub bg_img_path: Option<String>,
-    pub back_btn: Option<ButtonProperties>,
-}
-
-#[derive(Debug, Clone)]
 pub struct ButtonProperties {
     pub img_path: Option<String>,
     pub img_size: Vec2,
     pub img_margin: UiRect,
+    pub button_comp: Option<fn(&mut EntityCommands)>,
 }
 
 impl Default for ButtonProperties {
@@ -62,6 +32,46 @@ impl Default for ButtonProperties {
                 top: Val::Px(10.0),
                 bottom: Val::Px(10.0),
             },
+            button_comp: None,
         }
     }
+}
+
+#[derive(Debug, Default, Resource)]
+pub struct MainMenuScreenLerp {
+    start_time: f32,
+    end_time: f32,
+    lerp: f32,
+    invert: bool,
+}
+
+impl MainMenuScreenLerp {
+    pub fn start(&mut self, time: f32, invert: bool) {
+        self.start_time = time;
+        self.end_time = time + 0.5;
+        self.invert = invert;
+        self.lerp = if invert { 1.0 } else { 0.0 };
+    }
+
+    pub fn update(&mut self, time: f32) {
+        if self.start_time == self.end_time {
+            return;
+        }
+
+        self.lerp = (time - self.start_time) / (self.end_time - self.start_time);
+        self.lerp = self.lerp.clamp(0.0, 1.0);
+
+        if self.invert {
+            self.lerp = 1.0 - self.lerp;
+        }
+    }
+
+    pub fn get_lerp(&self) -> f32 {
+        self.lerp
+    }
+}
+
+#[derive(Debug, Default, Resource)]
+pub struct MainMenuActiveScreen {
+    pub screen_index: usize,
 }

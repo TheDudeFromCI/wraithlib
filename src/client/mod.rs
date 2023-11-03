@@ -23,7 +23,7 @@ impl PluginGroup for ClientPlugins {
             .add(CameraPlugin)
             .add(ClientGameStatePlugin)
             .add(LoadingScreenPlugin::default())
-            .add(MainMenuPlugin::default())
+            .add(MainMenuPlugin)
             .add(SplashPlugin::default())
             .add(UiAnimationsPlugin)
     }

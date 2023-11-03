@@ -1,17 +1,6 @@
 use bevy::prelude::*;
 
-use super::{
-    ButtonProperties,
-    MainMenuProperties,
-    MultiplayerButton,
-    QuitButton,
-    ServerListBGImage,
-    SettingsBGImage,
-    SettingsButton,
-    SinglePlayerBGImage,
-    SinglePlayerButton,
-    TitleScreenBGImage,
-};
+use super::{ButtonProperties, MainMenuProperties, MenuScreenProperties, TitleScreen};
 use crate::client::main_menu::components::MainMenuUI;
 
 pub(super) fn build_main_menu(
@@ -29,11 +18,11 @@ pub(super) fn build_main_menu(
         ..default()
     };
 
-    let title_screen = &properties.title_screen;
+    let title_screen = &properties.root_screen;
     match &title_screen.bg_img_path {
         Some(path) => commands.spawn((
             MainMenuUI,
-            TitleScreenBGImage,
+            TitleScreen,
             ImageBundle {
                 style: bg_style.clone(),
                 image: asset_server.load(path).into(),
@@ -44,7 +33,7 @@ pub(super) fn build_main_menu(
         )),
         None => commands.spawn((
             MainMenuUI,
-            TitleScreenBGImage,
+            TitleScreen,
             NodeBundle {
                 style: bg_style.clone(),
                 background_color: Color::BLACK.into(),
@@ -67,111 +56,22 @@ pub(super) fn build_main_menu(
             ..default()
         })
         .with_children(|p| {
-            if let Some(btn) = &title_screen.single_player_btn {
-                p.spawn((
-                    SinglePlayerButton,
-                    button_properties_into_bundle(&asset_server, btn),
-                ));
-            }
-
-            if let Some(btn) = &title_screen.server_list_btn {
-                p.spawn((
-                    MultiplayerButton,
-                    button_properties_into_bundle(&asset_server, btn),
-                ));
-            }
-
-            if let Some(btn) = &title_screen.settings_btn {
-                p.spawn((
-                    SettingsButton,
-                    button_properties_into_bundle(&asset_server, btn),
-                ));
-            }
-
-            if let Some(btn) = &title_screen.quit_btn {
-                p.spawn((
-                    QuitButton,
-                    button_properties_into_bundle(&asset_server, btn),
-                ));
+            for btn in title_screen.buttons.iter() {
+                let mut cmd = p.spawn(button_properties_into_bundle(&asset_server, btn));
+                if let Some(comp) = &btn.button_comp {
+                    comp(&mut cmd);
+                };
             }
         });
     });
 
-    if let Some(single_player_screen) = &properties.single_player_screen {
-        match &single_player_screen.bg_img_path {
-            Some(path) => commands.spawn((
-                MainMenuUI,
-                SinglePlayerBGImage,
-                ImageBundle {
-                    style: bg_style.clone(),
-                    image: asset_server.load(path).into(),
-                    background_color: Color::rgba(1.0, 1.0, 1.0, 0.0).into(),
-                    z_index: ZIndex::Global(100),
-                    ..default()
-                },
-            )),
-            None => commands.spawn((
-                MainMenuUI,
-                SinglePlayerBGImage,
-                NodeBundle {
-                    style: bg_style.clone(),
-                    background_color: Color::rgba(0.0, 0.0, 0.0, 0.0).into(),
-                    z_index: ZIndex::Global(100),
-                    ..default()
-                },
-            )),
-        };
-    }
-
-    if let Some(server_list_screen) = &properties.server_list_screen {
-        match &server_list_screen.bg_img_path {
-            Some(path) => commands.spawn((
-                MainMenuUI,
-                ServerListBGImage,
-                ImageBundle {
-                    style: bg_style.clone(),
-                    image: asset_server.load(path).into(),
-                    background_color: Color::rgba(1.0, 1.0, 1.0, 0.0).into(),
-                    z_index: ZIndex::Global(100),
-                    ..default()
-                },
-            )),
-            None => commands.spawn((
-                MainMenuUI,
-                ServerListBGImage,
-                NodeBundle {
-                    style: bg_style.clone(),
-                    background_color: Color::rgba(0.0, 0.0, 0.0, 0.0).into(),
-                    z_index: ZIndex::Global(100),
-                    ..default()
-                },
-            )),
-        };
-    }
-
-    if let Some(settings_screen) = &properties.settings_screen {
-        match &settings_screen.bg_img_path {
-            Some(path) => commands.spawn((
-                MainMenuUI,
-                SettingsBGImage,
-                ImageBundle {
-                    style: bg_style.clone(),
-                    image: asset_server.load(path).into(),
-                    background_color: Color::rgba(1.0, 1.0, 1.0, 0.0).into(),
-                    z_index: ZIndex::Global(100),
-                    ..default()
-                },
-            )),
-            None => commands.spawn((
-                MainMenuUI,
-                SettingsBGImage,
-                NodeBundle {
-                    style: bg_style.clone(),
-                    background_color: Color::rgba(0.0, 0.0, 0.0, 0.0).into(),
-                    z_index: ZIndex::Global(100),
-                    ..default()
-                },
-            )),
+    for screen in properties.child_screens.iter() {
+        let mut cmd = commands.spawn((
+            MainMenuUI,
+            screen_bg_into_bundle(&asset_server, screen, 100),
+        ));
+        if let Some(comp) = &screen.screen_comp {
+            comp(&mut cmd);
         };
     }
 }
@@ -179,6 +79,38 @@ pub(super) fn build_main_menu(
 pub(super) fn cleanup(ui: Query<Entity, With<MainMenuUI>>, mut commands: Commands) {
     for entity in ui.iter() {
         commands.entity(entity).despawn_recursive();
+    }
+}
+
+fn screen_bg_into_bundle(
+    asset_server: &Res<AssetServer>,
+    properties: &MenuScreenProperties,
+    z_index: i32,
+) -> ImageBundle {
+    let bg_style = Style {
+        position_type: PositionType::Absolute,
+        flex_direction: FlexDirection::Row,
+        justify_content: JustifyContent::Center,
+        align_items: AlignItems::Center,
+        width: Val::Percent(100.0),
+        height: Val::Percent(100.0),
+        ..default()
+    };
+
+    match &properties.bg_img_path {
+        Some(path) => ImageBundle {
+            style: bg_style,
+            image: asset_server.load(path).into(),
+            background_color: Color::rgba(1.0, 1.0, 1.0, 0.0).into(),
+            z_index: ZIndex::Global(z_index),
+            ..default()
+        },
+        None => ImageBundle {
+            style: bg_style,
+            background_color: Color::rgba(0.0, 0.0, 0.0, 0.0).into(),
+            z_index: ZIndex::Global(z_index),
+            ..default()
+        },
     }
 }
 

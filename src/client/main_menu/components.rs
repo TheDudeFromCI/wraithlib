@@ -4,16 +4,19 @@ use bevy::prelude::*;
 pub struct MainMenuUI;
 
 #[derive(Debug, Component)]
-pub struct TitleScreenBGImage;
+pub struct TitleScreen;
 
 #[derive(Debug, Component)]
-pub struct SinglePlayerBGImage;
+pub struct SinglePlayerScreen;
 
 #[derive(Debug, Component)]
-pub struct ServerListBGImage;
+pub struct ServerListScreen;
 
 #[derive(Debug, Component)]
-pub struct SettingsBGImage;
+pub struct SettingsScreen;
+
+#[derive(Debug, Component)]
+pub struct CreditsScreen;
 
 #[derive(Debug, Component)]
 pub struct SinglePlayerButton;
@@ -25,4 +28,10 @@ pub struct MultiplayerButton;
 pub struct SettingsButton;
 
 #[derive(Debug, Component)]
+pub struct CreditsButton;
+
+#[derive(Debug, Component)]
 pub struct QuitButton;
+
+#[derive(Debug, Component)]
+pub struct BackButton;

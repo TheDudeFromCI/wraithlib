@@ -3,12 +3,12 @@ use bevy::prelude::*;
 use wraithlib::client::loading_screen::{LoadingScreenPlugin, LoadingScreenProperties};
 use wraithlib::client::main_menu::{
     ButtonProperties,
-    MainMenuPlugin,
     MainMenuProperties,
-    ServerListScreenProperties,
-    SettingsScreenProperties,
-    SinglePlayerScreenProperties,
-    TitleScreenProperties,
+    MenuScreenProperties,
+    ServerListScreen,
+    SettingsScreen,
+    SinglePlayerScreen,
+    TitleScreen,
 };
 use wraithlib::client::splash::{SplashImageProperties, SplashPlugin};
 use wraithlib::client::ClientPlugins;
@@ -16,6 +16,71 @@ use wraithlib::client::ClientPlugins;
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::BLACK))
+        .insert_resource(MainMenuProperties {
+            root_screen: MenuScreenProperties {
+                bg_img_path: Some("images/menu/titlescreen.png".into()),
+                buttons: vec![
+                    ButtonProperties {
+                        img_path: Some("images/menu/buttons/singleplayer.png".into()),
+                        img_size: Vec2::new(200.0, 50.0),
+                        ..default()
+                    },
+                    ButtonProperties {
+                        img_path: Some("images/menu/buttons/multiplayer.png".into()),
+                        img_size: Vec2::new(200.0, 50.0),
+                        ..default()
+                    },
+                    ButtonProperties {
+                        img_path: Some("images/menu/buttons/settings.png".into()),
+                        img_size: Vec2::new(200.0, 50.0),
+                        ..default()
+                    },
+                    ButtonProperties {
+                        img_path: Some("images/menu/buttons/quit.png".into()),
+                        img_size: Vec2::new(200.0, 50.0),
+                        ..default()
+                    },
+                ],
+                screen_comp: Some(|cmd| {
+                    cmd.insert(TitleScreen);
+                }),
+            },
+            child_screens: vec![
+                MenuScreenProperties {
+                    bg_img_path: Some("images/menu/singleplayer.png".into()),
+                    buttons: vec![ButtonProperties {
+                        img_path: Some("images/menu/buttons/back.png".into()),
+                        img_size: Vec2::new(200.0, 50.0),
+                        ..default()
+                    }],
+                    screen_comp: Some(|cmd| {
+                        cmd.insert(SinglePlayerScreen);
+                    }),
+                },
+                MenuScreenProperties {
+                    bg_img_path: Some("images/menu/serverlist.png".into()),
+                    buttons: vec![ButtonProperties {
+                        img_path: Some("images/menu/buttons/back.png".into()),
+                        img_size: Vec2::new(200.0, 50.0),
+                        ..default()
+                    }],
+                    screen_comp: Some(|cmd| {
+                        cmd.insert(ServerListScreen);
+                    }),
+                },
+                MenuScreenProperties {
+                    bg_img_path: Some("images/menu/settings.png".into()),
+                    buttons: vec![ButtonProperties {
+                        img_path: Some("images/menu/buttons/back.png".into()),
+                        img_size: Vec2::new(200.0, 50.0),
+                        ..default()
+                    }],
+                    screen_comp: Some(|cmd| {
+                        cmd.insert(SettingsScreen);
+                    }),
+                },
+            ],
+        })
         .add_plugins(
             DefaultPlugins
                 .set(LogPlugin {
@@ -42,57 +107,6 @@ fn main() {
                         ..default()
                     }],
                     ..default()
-                })
-                .set(MainMenuPlugin {
-                    display: MainMenuProperties {
-                        title_screen: TitleScreenProperties {
-                            bg_img_path: Some("images/menu/titlescreen.png".into()),
-                            single_player_btn: Some(ButtonProperties {
-                                img_path: Some("images/menu/buttons/singleplayer.png".into()),
-                                img_size: Vec2::new(200.0, 50.0),
-                                ..default()
-                            }),
-                            server_list_btn: Some(ButtonProperties {
-                                img_path: Some("images/menu/buttons/multiplayer.png".into()),
-                                img_size: Vec2::new(200.0, 50.0),
-                                ..default()
-                            }),
-                            settings_btn: Some(ButtonProperties {
-                                img_path: Some("images/menu/buttons/settings.png".into()),
-                                img_size: Vec2::new(200.0, 50.0),
-                                ..default()
-                            }),
-                            quit_btn: Some(ButtonProperties {
-                                img_path: Some("images/menu/buttons/quit.png".into()),
-                                img_size: Vec2::new(200.0, 50.0),
-                                ..default()
-                            }),
-                        },
-                        single_player_screen: Some(SinglePlayerScreenProperties {
-                            bg_img_path: Some("images/menu/singleplayer.png".into()),
-                            back_btn: Some(ButtonProperties {
-                                img_path: Some("images/menu/buttons/back.png".into()),
-                                img_size: Vec2::new(200.0, 50.0),
-                                ..default()
-                            }),
-                        }),
-                        server_list_screen: Some(ServerListScreenProperties {
-                            bg_img_path: Some("images/menu/serverlist.png".into()),
-                            back_btn: Some(ButtonProperties {
-                                img_path: Some("images/menu/buttons/back.png".into()),
-                                img_size: Vec2::new(200.0, 50.0),
-                                ..default()
-                            }),
-                        }),
-                        settings_screen: Some(SettingsScreenProperties {
-                            bg_img_path: Some("images/menu/settings.png".into()),
-                            back_btn: Some(ButtonProperties {
-                                img_path: Some("images/menu/buttons/back.png".into()),
-                                img_size: Vec2::new(200.0, 50.0),
-                                ..default()
-                            }),
-                        }),
-                    },
                 })
                 .set(LoadingScreenPlugin {
                     properties: LoadingScreenProperties {
