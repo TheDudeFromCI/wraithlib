@@ -9,10 +9,10 @@ pub(super) fn build_main_menu(
     mut commands: Commands,
 ) {
     let title_screen = &properties.root_screen;
-    spawn_screen(&asset_server, title_screen, 0, &mut commands);
+    spawn_screen(&asset_server, title_screen, 0, true, &mut commands);
 
     for screen in properties.child_screens.iter() {
-        spawn_screen(&asset_server, screen, 100, &mut commands);
+        spawn_screen(&asset_server, screen, 100, false, &mut commands);
     }
 }
 
@@ -42,8 +42,15 @@ fn spawn_screen(
     asset_server: &Res<AssetServer>,
     properties: &MenuScreenProperties,
     z_index: i32,
+    display: bool,
     commands: &mut Commands,
 ) {
+    let display = if display {
+        Display::Flex
+    } else {
+        Display::None
+    };
+
     let bg_style = Style {
         position_type: PositionType::Absolute,
         flex_direction: FlexDirection::Row,
@@ -51,10 +58,9 @@ fn spawn_screen(
         align_items: AlignItems::Center,
         width: Val::Percent(100.0),
         height: Val::Percent(100.0),
+        display,
         ..default()
     };
-
-    let alpha = if z_index == 0 { 1.0 } else { 0.0 };
 
     let mut cmd = commands.spawn((
         MainMenuUI,
@@ -62,13 +68,13 @@ fn spawn_screen(
             Some(path) => ImageBundle {
                 style: bg_style,
                 image: asset_server.load(path).into(),
-                background_color: Color::rgba(1.0, 1.0, 1.0, alpha).into(),
+                background_color: Color::rgba(1.0, 1.0, 1.0, 1.0).into(),
                 z_index: ZIndex::Global(z_index),
                 ..default()
             },
             None => ImageBundle {
                 style: bg_style,
-                background_color: Color::rgba(0.0, 0.0, 0.0, alpha).into(),
+                background_color: Color::rgba(0.0, 0.0, 0.0, 1.0).into(),
                 z_index: ZIndex::Global(z_index),
                 ..default()
             },
