@@ -10,7 +10,7 @@ pub struct TitleScreen;
 pub struct SinglePlayerScreen;
 
 #[derive(Debug, Component)]
-pub struct ServerListScreen;
+pub struct MultiplayerScreen;
 
 #[derive(Debug, Component)]
 pub struct SettingsScreen;

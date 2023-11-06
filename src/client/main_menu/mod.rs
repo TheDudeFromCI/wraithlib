@@ -5,6 +5,7 @@ mod events;
 mod resources;
 mod systems;
 mod ui;
+mod view;
 
 pub use components::*;
 pub use events::*;
@@ -17,7 +18,6 @@ impl Plugin for MainMenuPlugin {
     fn build(&self, app_: &mut App) {
         app_.add_state::<MainMenuState>()
             .init_resource::<MainMenuProperties>()
-            .init_resource::<MainMenuScreenLerp>()
             .add_event::<OpenTitleScreenEvent>()
             .add_event::<OpenSinglePlayerScreenEvent>()
             .add_event::<OpenMultiplayerScreenEvent>()
@@ -25,7 +25,7 @@ impl Plugin for MainMenuPlugin {
             .add_event::<OpenCreditsScreenEvent>()
             .add_systems(
                 OnEnter(ClientGameState::MainMenu),
-                (systems::init_main_menu, ui::build_main_menu),
+                (systems::init_main_menu, view::build_ui),
             )
             .add_systems(OnExit(ClientGameState::MainMenu), ui::cleanup)
             .add_systems(
@@ -37,7 +37,6 @@ impl Plugin for MainMenuPlugin {
                     systems::credits_button,
                     systems::quit_button,
                     systems::back_button,
-                    systems::update_screen_lerp,
                     ui::button_hover,
                     ui::show_title_screen,
                     ui::show_single_player_screen,

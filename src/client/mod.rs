@@ -21,6 +21,7 @@ pub mod networking;
 #[derive(Debug, Default)]
 pub struct ClientPlugins;
 impl PluginGroup for ClientPlugins {
+    #[allow(unused_mut)]
     fn build(self) -> PluginGroupBuilder {
         let mut group = PluginGroupBuilder::start::<Self>()
             .add(CameraPlugin)
