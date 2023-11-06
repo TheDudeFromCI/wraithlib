@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::ActiveDownloadingSystems;
+use super::{ActiveWorldBuildingSystems, ActiveWorldClosingSystems};
 use crate::client::gamestates::ClientGameState;
 
 pub(super) fn client_startup(mut state: ResMut<NextState<ClientGameState>>) {
@@ -8,17 +8,22 @@ pub(super) fn client_startup(mut state: ResMut<NextState<ClientGameState>>) {
     debug!("Client entering splash game state.");
 }
 
-pub(super) fn finish_downloading_connection(
-    active_downloading: Res<ActiveDownloadingSystems>,
+pub(super) fn finish_building_world(
+    active_building: Res<ActiveWorldBuildingSystems>,
     mut state: ResMut<NextState<ClientGameState>>,
 ) {
-    if active_downloading.is_empty() {
+    if active_building.is_empty() {
         state.set(ClientGameState::Online);
         debug!("Client entering online game state.");
     }
 }
 
-pub(super) fn finish_disconnecting(mut state: ResMut<NextState<ClientGameState>>) {
-    state.set(ClientGameState::MainMenu);
-    debug!("Client re-entering main menu game state.");
+pub(super) fn finish_closing_world(
+    active_closing: Res<ActiveWorldClosingSystems>,
+    mut state: ResMut<NextState<ClientGameState>>,
+) {
+    if active_closing.is_empty() {
+        state.set(ClientGameState::MainMenu);
+        debug!("Client re-entering main menu game state.");
+    }
 }

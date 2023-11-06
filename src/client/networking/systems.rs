@@ -60,7 +60,7 @@ pub(super) fn wait_for_connection(
 ) {
     if transport.is_connected() {
         next_state.set(NetworkState::Connected);
-        game_state.set(ClientGameState::Downloading);
+        game_state.set(ClientGameState::BuildingWorld);
         events.send(JoinedServerEvent);
         debug!("Client joined server.");
     }
@@ -80,7 +80,7 @@ pub(super) fn handle_broken_connection(
             debug!("Client failed to connect to server.");
         } else {
             disconnected_events.send(DisconnectedFromServerEvent);
-            game_state.set(ClientGameState::Disconnecting);
+            game_state.set(ClientGameState::ClosingWorld);
             debug!("Client disconnected from server.");
         }
 
