@@ -39,6 +39,14 @@ fn main() {
             }),
             single_player_screen: Some(SinglePlayerScreenProperties {
                 bg_img_path: "images/menu/singleplayer.png".into(),
+                new_game_button: ImageProperties {
+                    img_path: "images/menu/buttons/new_game.png".into(),
+                    img_size: Vec2::new(200.0, 50.0),
+                },
+                load_game_button: ImageProperties {
+                    img_path: "images/menu/buttons/load_game.png".into(),
+                    img_size: Vec2::new(200.0, 50.0),
+                },
                 back_button: ImageProperties {
                     img_path: "images/menu/buttons/back.png".into(),
                     img_size: Vec2::new(200.0, 50.0),

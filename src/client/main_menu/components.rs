@@ -35,3 +35,9 @@ pub struct QuitButton;
 
 #[derive(Debug, Component)]
 pub struct BackButton;
+
+#[derive(Debug, Component)]
+pub struct NewGameButton;
+
+#[derive(Debug, Component)]
+pub struct LoadGameButton;

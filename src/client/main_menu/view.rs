@@ -4,10 +4,12 @@ use super::{
     BackButton,
     CreditsButton,
     CreditsScreen,
+    LoadGameButton,
     MainMenuProperties,
     MainMenuScreen,
     MultiplayerButton,
     MultiplayerScreen,
+    NewGameButton,
     QuitButton,
     SettingsButton,
     SettingsScreen,
@@ -170,6 +172,34 @@ pub(super) fn build_ui(
                     ..default()
                 })
                 .with_children(|p| {
+                    let button = &screen.new_game_button;
+                    p.spawn((
+                        NewGameButton,
+                        ButtonBundle {
+                            style: Style {
+                                width: Val::Px(button.img_size.x),
+                                height: Val::Px(button.img_size.y),
+                                ..btn_style.clone()
+                            },
+                            image: asset_server.load(&button.img_path).into(),
+                            ..default()
+                        },
+                    ));
+
+                    let button = &screen.load_game_button;
+                    p.spawn((
+                        LoadGameButton,
+                        ButtonBundle {
+                            style: Style {
+                                width: Val::Px(button.img_size.x),
+                                height: Val::Px(button.img_size.y),
+                                ..btn_style.clone()
+                            },
+                            image: asset_server.load(&button.img_path).into(),
+                            ..default()
+                        },
+                    ));
+
                     let button = &screen.back_button;
                     p.spawn((
                         BackButton,

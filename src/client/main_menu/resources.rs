@@ -22,6 +22,8 @@ pub struct TitleScreenProperties {
 #[derive(Debug, Clone)]
 pub struct SinglePlayerScreenProperties {
     pub bg_img_path: String,
+    pub new_game_button: ImageProperties,
+    pub load_game_button: ImageProperties,
     pub back_button: ImageProperties,
 }
 
