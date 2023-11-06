@@ -1,22 +1,55 @@
 use bevy::prelude::*;
 
-use super::{ButtonProperties, MainMenuProperties, MenuScreenProperties};
-use crate::client::main_menu::components::MainMenuUI;
+use super::{
+    ButtonProperties,
+    CreditsScreen,
+    MainMenuProperties,
+    MenuScreenProperties,
+    OpenCreditsScreenEvent,
+    OpenMultiplayerScreenEvent,
+    OpenSettingsScreenEvent,
+    OpenSinglePlayerScreenEvent,
+    OpenTitleScreenEvent,
+    ServerListScreen,
+    SettingsScreen,
+    SinglePlayerScreen,
+    TitleScreen,
+};
+use crate::client::main_menu::components::MainMenuScreen;
 
 pub(super) fn build_main_menu(
     properties: Res<MainMenuProperties>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
-    let title_screen = &properties.root_screen;
-    spawn_screen(&asset_server, title_screen, 0, true, &mut commands);
+    let cmd = &mut commands;
+    let server = &asset_server;
 
-    for screen in properties.child_screens.iter() {
-        spawn_screen(&asset_server, screen, 100, false, &mut commands);
+    let screen = &properties.title_screen;
+    spawn_screen(server, screen, true, cmd, TitleScreen);
+
+    let screen = &properties.single_player_screen;
+    if let Some(screen) = screen {
+        spawn_screen(server, screen, false, cmd, SinglePlayerScreen);
+    }
+
+    let screen = &properties.multiplayer_screen;
+    if let Some(screen) = screen {
+        spawn_screen(server, screen, false, cmd, ServerListScreen);
+    }
+
+    let screen = &properties.settings_screen;
+    if let Some(screen) = screen {
+        spawn_screen(server, screen, false, cmd, SettingsScreen);
+    }
+
+    let screen = &properties.credits_screen;
+    if let Some(screen) = screen {
+        spawn_screen(server, screen, false, cmd, CreditsScreen);
     }
 }
 
-pub(super) fn cleanup(ui: Query<Entity, With<MainMenuUI>>, mut commands: Commands) {
+pub(super) fn cleanup(ui: Query<Entity, With<MainMenuScreen>>, mut commands: Commands) {
     for entity in ui.iter() {
         commands.entity(entity).despawn_recursive();
     }
@@ -38,12 +71,92 @@ pub(super) fn button_hover(
     }
 }
 
-fn spawn_screen(
+pub(super) fn show_title_screen(
+    mut ui_to_close: Query<&mut Style, (With<MainMenuScreen>, Without<TitleScreen>)>,
+    mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<TitleScreen>)>,
+    mut open_screen_evs: EventReader<OpenTitleScreenEvent>,
+) {
+    for _ in open_screen_evs.iter() {
+        for mut style in ui_to_close.iter_mut() {
+            style.display = Display::None;
+        }
+
+        for mut style in ui_to_open.iter_mut() {
+            style.display = Display::Flex;
+        }
+    }
+}
+
+pub(super) fn show_single_player_screen(
+    mut ui_to_close: Query<&mut Style, (With<MainMenuScreen>, Without<SinglePlayerScreen>)>,
+    mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<SinglePlayerScreen>)>,
+    mut open_screen_evs: EventReader<OpenSinglePlayerScreenEvent>,
+) {
+    for _ in open_screen_evs.iter() {
+        for mut style in ui_to_close.iter_mut() {
+            style.display = Display::None;
+        }
+
+        for mut style in ui_to_open.iter_mut() {
+            style.display = Display::Flex;
+        }
+    }
+}
+
+pub(super) fn show_multiplayer_screen(
+    mut ui_to_close: Query<&mut Style, (With<MainMenuScreen>, Without<ServerListScreen>)>,
+    mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<ServerListScreen>)>,
+    mut open_screen_evs: EventReader<OpenMultiplayerScreenEvent>,
+) {
+    for _ in open_screen_evs.iter() {
+        for mut style in ui_to_close.iter_mut() {
+            style.display = Display::None;
+        }
+
+        for mut style in ui_to_open.iter_mut() {
+            style.display = Display::Flex;
+        }
+    }
+}
+
+pub(super) fn show_settings_screen(
+    mut ui_to_close: Query<&mut Style, (With<MainMenuScreen>, Without<SettingsScreen>)>,
+    mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<SettingsScreen>)>,
+    mut open_screen_evs: EventReader<OpenSettingsScreenEvent>,
+) {
+    for _ in open_screen_evs.iter() {
+        for mut style in ui_to_close.iter_mut() {
+            style.display = Display::None;
+        }
+
+        for mut style in ui_to_open.iter_mut() {
+            style.display = Display::Flex;
+        }
+    }
+}
+
+pub(super) fn show_credits_screen(
+    mut ui_to_close: Query<&mut Style, (With<MainMenuScreen>, Without<CreditsScreen>)>,
+    mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<CreditsScreen>)>,
+    mut open_screen_evs: EventReader<OpenCreditsScreenEvent>,
+) {
+    for _ in open_screen_evs.iter() {
+        for mut style in ui_to_close.iter_mut() {
+            style.display = Display::None;
+        }
+
+        for mut style in ui_to_open.iter_mut() {
+            style.display = Display::Flex;
+        }
+    }
+}
+
+fn spawn_screen<B: Bundle>(
     asset_server: &Res<AssetServer>,
     properties: &MenuScreenProperties,
-    z_index: i32,
     display: bool,
     commands: &mut Commands,
+    bundle: B,
 ) {
     let display = if display {
         Display::Flex
@@ -63,26 +176,22 @@ fn spawn_screen(
     };
 
     let mut cmd = commands.spawn((
-        MainMenuUI,
+        MainMenuScreen,
+        bundle,
         match &properties.bg_img_path {
             Some(path) => ImageBundle {
                 style: bg_style,
                 image: asset_server.load(path).into(),
                 background_color: Color::rgba(1.0, 1.0, 1.0, 1.0).into(),
-                z_index: ZIndex::Global(z_index),
                 ..default()
             },
             None => ImageBundle {
                 style: bg_style,
                 background_color: Color::rgba(0.0, 0.0, 0.0, 1.0).into(),
-                z_index: ZIndex::Global(z_index),
                 ..default()
             },
         },
     ));
-    if let Some(comp) = &properties.screen_comp {
-        comp(&mut cmd);
-    };
 
     cmd.with_children(|p| {
         p.spawn(NodeBundle {

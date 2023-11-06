@@ -8,12 +8,8 @@ use wraithlib::client::main_menu::{
     MenuScreenProperties,
     MultiplayerButton,
     QuitButton,
-    ServerListScreen,
     SettingsButton,
-    SettingsScreen,
     SinglePlayerButton,
-    SinglePlayerScreen,
-    TitleScreen,
 };
 use wraithlib::client::splash::{SplashImageProperties, SplashPlugin};
 use wraithlib::client::ClientPlugins;
@@ -22,7 +18,7 @@ fn main() {
     App::new()
         .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(MainMenuProperties {
-            root_screen: MenuScreenProperties {
+            title_screen: MenuScreenProperties {
                 bg_img_path: Some("images/menu/titlescreen.png".into()),
                 buttons: vec![
                     ButtonProperties {
@@ -58,54 +54,41 @@ fn main() {
                         ..default()
                     },
                 ],
-                screen_comp: Some(|cmd| {
-                    cmd.insert(TitleScreen);
-                }),
             },
-            child_screens: vec![
-                MenuScreenProperties {
-                    bg_img_path: Some("images/menu/singleplayer.png".into()),
-                    buttons: vec![ButtonProperties {
-                        img_path: Some("images/menu/buttons/back.png".into()),
-                        img_size: Vec2::new(200.0, 50.0),
-                        button_comp: Some(|cmd| {
-                            cmd.insert(BackButton);
-                        }),
-                        ..default()
-                    }],
-                    screen_comp: Some(|cmd| {
-                        cmd.insert(SinglePlayerScreen);
+            single_player_screen: Some(MenuScreenProperties {
+                bg_img_path: Some("images/menu/singleplayer.png".into()),
+                buttons: vec![ButtonProperties {
+                    img_path: Some("images/menu/buttons/back.png".into()),
+                    img_size: Vec2::new(200.0, 50.0),
+                    button_comp: Some(|cmd| {
+                        cmd.insert(BackButton);
                     }),
-                },
-                MenuScreenProperties {
-                    bg_img_path: Some("images/menu/serverlist.png".into()),
-                    buttons: vec![ButtonProperties {
-                        img_path: Some("images/menu/buttons/back.png".into()),
-                        img_size: Vec2::new(200.0, 50.0),
-                        button_comp: Some(|cmd| {
-                            cmd.insert(BackButton);
-                        }),
-                        ..default()
-                    }],
-                    screen_comp: Some(|cmd| {
-                        cmd.insert(ServerListScreen);
+                    ..default()
+                }],
+            }),
+            multiplayer_screen: Some(MenuScreenProperties {
+                bg_img_path: Some("images/menu/serverlist.png".into()),
+                buttons: vec![ButtonProperties {
+                    img_path: Some("images/menu/buttons/back.png".into()),
+                    img_size: Vec2::new(200.0, 50.0),
+                    button_comp: Some(|cmd| {
+                        cmd.insert(BackButton);
                     }),
-                },
-                MenuScreenProperties {
-                    bg_img_path: Some("images/menu/settings.png".into()),
-                    buttons: vec![ButtonProperties {
-                        img_path: Some("images/menu/buttons/back.png".into()),
-                        img_size: Vec2::new(200.0, 50.0),
-                        button_comp: Some(|cmd| {
-                            cmd.insert(BackButton);
-                        }),
-                        ..default()
-                    }],
-                    screen_comp: Some(|cmd| {
-                        cmd.insert(SettingsScreen);
+                    ..default()
+                }],
+            }),
+            settings_screen: Some(MenuScreenProperties {
+                bg_img_path: Some("images/menu/settings.png".into()),
+                buttons: vec![ButtonProperties {
+                    img_path: Some("images/menu/buttons/back.png".into()),
+                    img_size: Vec2::new(200.0, 50.0),
+                    button_comp: Some(|cmd| {
+                        cmd.insert(BackButton);
                     }),
-                },
-            ],
+                    ..default()
+                }],
+            }),
+            credits_screen: None,
         })
         .add_plugins(
             DefaultPlugins

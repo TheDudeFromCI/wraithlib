@@ -1,27 +1,28 @@
 use bevy::prelude::*;
 
 mod components;
+mod events;
 mod resources;
 mod systems;
 mod ui;
 
 pub use components::*;
+pub use events::*;
 pub use resources::*;
 
 use crate::client::gamestates::ClientGameState;
 
-pub const TITLE_SCREEN_INDEX: usize = 0;
-pub const SINGLE_PLAYER_SCREEN_INDEX: usize = 1;
-pub const SERVER_LIST_SCREEN_INDEX: usize = 2;
-pub const SETTINGS_SCREEN_INDEX: usize = 3;
-pub const CREDITS_SCREEN_INDEX: usize = 4;
-
 pub struct MainMenuPlugin;
 impl Plugin for MainMenuPlugin {
     fn build(&self, app_: &mut App) {
-        app_.init_resource::<MainMenuProperties>()
+        app_.add_state::<MainMenuState>()
+            .init_resource::<MainMenuProperties>()
             .init_resource::<MainMenuScreenLerp>()
-            .init_resource::<MainMenuActiveScreen>()
+            .add_event::<OpenTitleScreenEvent>()
+            .add_event::<OpenSinglePlayerScreenEvent>()
+            .add_event::<OpenMultiplayerScreenEvent>()
+            .add_event::<OpenSettingsScreenEvent>()
+            .add_event::<OpenCreditsScreenEvent>()
             .add_systems(
                 OnEnter(ClientGameState::MainMenu),
                 (systems::init_main_menu, ui::build_main_menu),
@@ -38,6 +39,11 @@ impl Plugin for MainMenuPlugin {
                     systems::back_button,
                     systems::update_screen_lerp,
                     ui::button_hover,
+                    ui::show_title_screen,
+                    ui::show_single_player_screen,
+                    ui::show_multiplayer_screen,
+                    ui::show_settings_screen,
+                    ui::show_credits_screen,
                 )
                     .run_if(in_state(ClientGameState::MainMenu)),
             );

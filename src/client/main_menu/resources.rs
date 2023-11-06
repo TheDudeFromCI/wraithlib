@@ -3,15 +3,17 @@ use bevy::prelude::*;
 
 #[derive(Default, Resource)]
 pub struct MainMenuProperties {
-    pub root_screen: MenuScreenProperties,
-    pub child_screens: Vec<MenuScreenProperties>,
+    pub title_screen: MenuScreenProperties,
+    pub single_player_screen: Option<MenuScreenProperties>,
+    pub multiplayer_screen: Option<MenuScreenProperties>,
+    pub settings_screen: Option<MenuScreenProperties>,
+    pub credits_screen: Option<MenuScreenProperties>,
 }
 
 #[derive(Default)]
 pub struct MenuScreenProperties {
     pub bg_img_path: Option<String>,
     pub buttons: Vec<ButtonProperties>,
-    pub screen_comp: Option<fn(&mut EntityCommands)>,
 }
 
 pub struct ButtonProperties {
@@ -71,7 +73,12 @@ impl MainMenuScreenLerp {
     }
 }
 
-#[derive(Debug, Default, Resource)]
-pub struct MainMenuActiveScreen {
-    pub screen_index: usize,
+#[derive(Debug, Default, States, PartialEq, Eq, Clone, Copy, Hash)]
+pub enum MainMenuState {
+    #[default]
+    TitleScreen,
+    SinglePlayerScreen,
+    MultiplayerScreen,
+    SettingsScreen,
+    CreditsScreen,
 }

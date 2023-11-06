@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Debug, Component)]
-pub struct MainMenuUI;
+pub struct MainMenuScreen;
 
 #[derive(Debug, Component)]
 pub struct TitleScreen;
