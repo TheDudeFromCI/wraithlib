@@ -13,6 +13,7 @@ use wraithlib::client::main_menu::{
 };
 use wraithlib::client::splash::{SplashImageProperties, SplashPlugin};
 use wraithlib::client::ClientPlugins;
+use wraithlib::common::WraithLibPlugins;
 
 fn main() {
     App::new()
@@ -108,6 +109,7 @@ fn main() {
                     ..default()
                 }),
         )
+        .add_plugins(WraithLibPlugins)
         .add_plugins(
             ClientPlugins
                 .set(SplashPlugin {

@@ -15,16 +15,27 @@ pub mod main_menu;
 pub mod splash;
 pub mod ui_animations;
 
+#[cfg(feature = "networking")]
+pub mod networking;
+
 #[derive(Debug, Default)]
 pub struct ClientPlugins;
 impl PluginGroup for ClientPlugins {
     fn build(self) -> PluginGroupBuilder {
-        PluginGroupBuilder::start::<Self>()
+        let mut group = PluginGroupBuilder::start::<Self>()
             .add(CameraPlugin)
             .add(ClientGameStatePlugin)
             .add(LoadingScreenPlugin::default())
             .add(MainMenuPlugin)
             .add(SplashPlugin::default())
-            .add(UiAnimationsPlugin)
+            .add(UiAnimationsPlugin);
+
+        #[cfg(feature = "networking")]
+        {
+            use crate::client::networking::ClientNetworkingPlugin;
+            group = group.add(ClientNetworkingPlugin);
+        }
+
+        group
     }
 }

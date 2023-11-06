@@ -1,0 +1,100 @@
+use bevy::app::AppExit;
+use bevy::prelude::*;
+use bevy_renet::renet::transport::{NetcodeServerTransport, NetcodeTransportError};
+use bevy_renet::renet::{DefaultChannel, RenetServer, ServerEvent};
+
+use super::{
+    ClientConnectedEvent,
+    ClientConnection,
+    ClientDisconnectedEvent,
+    ReceivePacket,
+    SendPacket,
+};
+use crate::common::networking::PacketContainer;
+
+pub(super) fn server_event_handler(
+    mut clients: Query<(Entity, &mut ClientConnection)>,
+    mut server_events: EventReader<ServerEvent>,
+    mut connected_events: EventWriter<ClientConnectedEvent>,
+    mut disconnected_events: EventWriter<ClientDisconnectedEvent>,
+    mut commands: Commands,
+) {
+    for event in server_events.iter() {
+        match event {
+            ServerEvent::ClientConnected { client_id } => {
+                let id = commands.spawn((ClientConnection::new(*client_id),)).id();
+
+                connected_events.send(ClientConnectedEvent {
+                    client_id: *client_id,
+                    entity: id,
+                });
+            }
+            ServerEvent::ClientDisconnected {
+                client_id,
+                reason: _,
+            } => {
+                let id = clients
+                    .iter()
+                    .find(|(_, connection)| connection.client_id() == *client_id)
+                    .map(|(id, _)| id)
+                    .unwrap();
+
+                clients.get_mut(id).unwrap().1.disconnect();
+                disconnected_events.send(ClientDisconnectedEvent {
+                    client_id: *client_id,
+                    entity: id,
+                });
+            }
+        };
+    }
+}
+
+pub(super) fn send_packet(mut server: ResMut<RenetServer>, mut events: EventReader<SendPacket>) {
+    for ev in events.iter() {
+        if !server.is_connected(ev.client_id) {
+            continue;
+        }
+
+        let Some(message) = ev.packet.serialize() else {
+            warn!("Failed to serialize packet!");
+            continue;
+        };
+
+        server.send_message(ev.client_id, DefaultChannel::ReliableOrdered, message);
+    }
+}
+
+pub(super) fn receive_packets(
+    mut server: ResMut<RenetServer>,
+    mut events: EventWriter<ReceivePacket>,
+) {
+    for client_id in server.clients_id().into_iter() {
+        while let Some(message) = server.receive_message(client_id, DefaultChannel::ReliableOrdered)
+        {
+            let Some(packet) = PacketContainer::deserialize(&message) else {
+                warn!("Failed to deserialize packet from {}!", client_id);
+                continue;
+            };
+
+            events.send(ReceivePacket { packet, client_id });
+        }
+    }
+}
+
+pub(super) fn error_handling(mut renet_error: EventReader<NetcodeTransportError>) {
+    for e in renet_error.iter() {
+        error!("Networking Error: {}", e);
+    }
+}
+
+pub(super) fn close_connections_on_exit(
+    mut app_exit_evs: EventReader<AppExit>,
+    mut server: ResMut<RenetServer>,
+    mut transport: ResMut<NetcodeServerTransport>,
+) {
+    if app_exit_evs.iter().next().is_none() {
+        return;
+    }
+    server.disconnect_all();
+    transport.disconnect_all(&mut server);
+}

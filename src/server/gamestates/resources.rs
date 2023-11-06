@@ -1,22 +1,20 @@
 use bevy::prelude::*;
 
 #[derive(Debug, Default, States, Clone, Copy, Eq, PartialEq, Hash)]
-pub enum ClientGameState {
+pub enum ServerGameState {
     #[default]
     Init,
-    Splash,
-    MainMenu,
-    Downloading,
+    Loading,
     Online,
-    Disconnecting,
+    ShuttingDown,
 }
 
 #[derive(Debug, Default, Resource)]
-pub struct ActiveDownloadingSystems {
+pub struct ActiveLoadingSystems {
     count: usize,
 }
 
-impl ActiveDownloadingSystems {
+impl ActiveLoadingSystems {
     pub fn new() -> Self {
         Self { count: 0 }
     }
