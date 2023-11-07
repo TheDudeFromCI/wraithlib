@@ -19,21 +19,22 @@ pub struct SplashPlugin {
 }
 
 impl Plugin for SplashPlugin {
-    fn build(&self, app: &mut App) {
-        app.insert_resource(SplashImages {
-            images: self.images.clone(),
-            start_delay: self.start_delay,
-            end_delay: self.end_delay,
-            delay_between: self.delay_between,
-        })
-        .add_systems(OnEnter(ClientGameState::Splash), systems::build_splash)
-        .add_systems(OnExit(ClientGameState::Splash), systems::cleanup)
-        .add_systems(
-            Update,
-            systems::exit_state
-                .run_if(in_state(ClientGameState::Splash))
-                .run_if(is_not_loading),
-        );
+    fn build(&self, app_: &mut App) {
+        app_.insert_resource(ClearColor(Color::BLACK))
+            .insert_resource(SplashImages {
+                images: self.images.clone(),
+                start_delay: self.start_delay,
+                end_delay: self.end_delay,
+                delay_between: self.delay_between,
+            })
+            .add_systems(OnEnter(ClientGameState::Splash), systems::build_splash)
+            .add_systems(OnExit(ClientGameState::Splash), systems::cleanup)
+            .add_systems(
+                Update,
+                systems::exit_state
+                    .run_if(in_state(ClientGameState::Splash))
+                    .run_if(is_not_loading),
+            );
     }
 }
 

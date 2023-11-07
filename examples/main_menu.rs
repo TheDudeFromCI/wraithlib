@@ -15,7 +15,6 @@ use wraithlib::common::WraithLibPlugins;
 
 fn main() {
     App::new()
-        .insert_resource(ClearColor(Color::BLACK))
         .insert_resource(MainMenuProperties {
             title_screen: Some(TitleScreenProperties {
                 bg_img_path: "images/menu/titlescreen.png".into(),

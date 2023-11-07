@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use wraithlib::common::files::*;
 use wraithlib::common::WraithLibPlugins;
 
-include_sql!("examples/sql/save_counter.sql");
+include_sql!("assets/sql/save_counter.sql");
 
 fn main() {
     App::new()
