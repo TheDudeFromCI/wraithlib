@@ -53,7 +53,7 @@ name = "saving"
 required-features = ["files"]
 
 [[example]]
-name = "simple"
+name = "main_menu"
 required-features = ["client"]
 
 [[example]]
