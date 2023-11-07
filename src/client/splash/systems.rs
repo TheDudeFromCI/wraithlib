@@ -15,6 +15,11 @@ pub(super) fn build_splash(
     mut commands: Commands,
 ) {
     let mut required_duration = splash_images.start_delay + splash_images.end_delay;
+    if splash_images.images.is_empty() {
+        commands.spawn(SplashImageView { end_time: 0.0 });
+        return;
+    }
+
     required_duration += splash_images.delay_between * (splash_images.images.len() - 1) as f32;
     for img in &splash_images.images {
         required_duration += img.fade_in_duration;

@@ -40,7 +40,7 @@ impl Plugin for SplashPlugin {
 impl Default for SplashPlugin {
     fn default() -> Self {
         Self {
-            images: vec![SplashImageProperties::default()],
+            images: vec![],
             start_delay: 1.0,
             end_delay: 0.5,
             delay_between: 0.5,
