@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_simple_text_input::TextInput;
 
 use super::*;
 use crate::client::ui::ScrollPane;
@@ -317,11 +318,40 @@ pub(super) fn build_ui(
             ))
             .with_children(|p| {
                 p.spawn(NodeBundle {
-                    style: btn_col_style.clone(),
+                    style: Style {
+                        flex_direction: FlexDirection::Column,
+                        width: Val::Auto,
+                        height: Val::Auto,
+                        ..btn_col_style.clone()
+                    },
                     background_color: Color::NONE.into(),
+                    border_color: Color::YELLOW.into(),
                     ..default()
                 })
                 .with_children(|p| {
+                    p.spawn((
+                        NodeBundle {
+                            style: Style {
+                                width: Val::Px(400.0),
+                                height: Val::Px(40.0),
+                                border: UiRect::all(Val::Px(1.0)),
+                                padding: UiRect::all(Val::Px(5.0)),
+                                ..center.clone()
+                            },
+                            background_color: Color::WHITE.into(),
+                            border_color: BorderColor(Color::BLACK),
+                            ..default()
+                        },
+                        TextInput {
+                            text_style: TextStyle {
+                                font_size: 26.0,
+                                color: Color::BLACK,
+                                ..default()
+                            },
+                            ..default()
+                        },
+                    ));
+
                     let button = &screen.confirm_button;
                     p.spawn((
                         ConfirmEditServerButton,
