@@ -14,7 +14,7 @@ pub(super) fn condition_is_done_loading(
     //       It would be better to have a way to check if all assets are loaded.
 
     if local_time.is_none() {
-        *local_time = Some(time.elapsed_seconds() + 5.0);
+        *local_time = Some(time.elapsed_seconds() + 1.0);
     }
 
     time.elapsed_seconds() > local_time.unwrap()

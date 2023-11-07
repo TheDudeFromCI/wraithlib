@@ -76,7 +76,7 @@ fn main() {
                 })
                 .set(WindowPlugin {
                     primary_window: Some(Window {
-                        title: "WraithLibrary [ Simple Preview ]".into(),
+                        title: "WraithLibrary [ Main Menu Example ]".into(),
                         resolution: (1280.0, 720.0).into(),
                         resizable: true,
                         fit_canvas_to_parent: true,

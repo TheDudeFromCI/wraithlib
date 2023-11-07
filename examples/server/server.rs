@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use wraithlib::common::WraithLibPlugins;
 use wraithlib::server::ServerPlugins;
 
-fn main() {
+pub fn run() {
     App::new()
         .add_plugins(MinimalPlugins)
         .add_plugins(WraithLibPlugins)

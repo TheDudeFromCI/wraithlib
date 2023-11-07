@@ -59,3 +59,7 @@ required-features = ["client"]
 [[example]]
 name = "uuid"
 required-features = ["uuid"]
+
+[[example]]
+name = "server"
+required-features = ["client", "server"]

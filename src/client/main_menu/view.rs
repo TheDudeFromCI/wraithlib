@@ -230,8 +230,16 @@ pub(super) fn build_ui(
             ))
             .with_children(|p| {
                 p.spawn(NodeBundle {
-                    style: btn_col_style.clone(),
+                    style: Style {
+                        flex_direction: FlexDirection::Column,
+                        justify_content: JustifyContent::Center,
+                        align_items: AlignItems::Center,
+                        width: Val::Percent(80.0),
+                        height: Val::Percent(80.0),
+                        ..default()
+                    },
                     background_color: Color::NONE.into(),
+                    border_color: Color::WHITE.into(),
                     ..default()
                 })
                 .with_children(|p| {
