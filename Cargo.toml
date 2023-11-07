@@ -12,6 +12,7 @@ lazy_static = "1.4.0"
 typetag = { version = "0.2.13", optional = true }
 uuid = { version = "1.5.0", features = ["v4"], optional = true }
 rusqlite = { version = "0.29.0", features = ["bundled"], optional = true }
+include-sqlite-sql = { version = "0.2.1", optional = true }
 
 [features]
 default = ["uuid", "files"]
@@ -45,7 +46,7 @@ server = ["bevy/multi-threaded", "networking"]
 dynamic = ["bevy/dynamic_linking"]
 uuid = ["dep:uuid"]
 networking = ["dep:bevy_renet", "dep:typetag", "dep:bincode"]
-files = ["dep:rusqlite"]
+files = ["dep:rusqlite", "dep:include-sqlite-sql"]
 
 [[example]]
 name = "saving"

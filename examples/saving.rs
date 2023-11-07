@@ -1,7 +1,8 @@
 use bevy::prelude::*;
-use rusqlite::params;
-use wraithlib::common::files::Files;
+use wraithlib::common::files::*;
 use wraithlib::common::WraithLibPlugins;
+
+include_sql!("examples/sql/save_counter.sql");
 
 fn main() {
     App::new()
@@ -19,27 +20,21 @@ fn save_game(time: Res<Time>, files: Res<Files>, mut last_save: Local<f32>) {
     *last_save = time;
 
     let conn = files.get_save("save_counter").open();
+    update_counter(&conn).unwrap();
+}
 
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS save_count (value INTEGER)",
-        params![],
-    )
-    .unwrap();
+fn update_counter(save: &Connection) -> rusqlite::Result<()> {
+    save.init_save_counter()?;
 
-    let mut count: i32 = conn
-        .query_row(
-            "SELECT value FROM save_count ORDER BY value DESC LIMIT 1",
-            params![],
-            |row| row.get(0),
-        )
-        .unwrap_or(0);
+    let mut count = save.get_save_count(|row| {
+        let r: i32 = row.get(0)?;
+        Ok(r)
+    })?;
 
     count += 1;
     println!("Save Count: {}", count);
 
-    conn.execute(
-        "INSERT INTO save_count (value) VALUES (?1)",
-        rusqlite::params![count],
-    )
-    .unwrap();
+    save.set_save_count(count)?;
+
+    Ok(())
 }

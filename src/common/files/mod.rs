@@ -4,6 +4,8 @@ mod file_system;
 mod systems;
 
 pub use file_system::*;
+pub use include_sqlite_sql::*;
+pub use rusqlite::Connection;
 
 pub struct FilesPlugin;
 impl Plugin for FilesPlugin {
