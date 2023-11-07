@@ -6,6 +6,10 @@ include_sql!("examples/sql/save_counter.sql");
 
 fn main() {
     App::new()
+        .insert_resource(Files {
+            data_folder: "saves/examples".into(),
+            file_ext: "db".into(),
+        })
         .add_plugins(MinimalPlugins)
         .add_plugins(WraithLibPlugins)
         .add_systems(Update, save_game)
