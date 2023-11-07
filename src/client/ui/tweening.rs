@@ -1,25 +1,7 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
-use bevy_tweening::{
-    Delay,
-    EaseFunction,
-    Lens,
-    Sequence,
-    Tween,
-    TweeningDirection,
-    TweeningPlugin,
-};
-
-pub struct UiAnimationsPlugin;
-impl Plugin for UiAnimationsPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_plugins(TweeningPlugin).add_systems(
-            Update,
-            bevy_tweening::component_animator_system::<BackgroundColor>,
-        );
-    }
-}
+use bevy_tweening::{Delay, EaseFunction, Lens, Sequence, Tween, TweeningDirection};
 
 #[derive(Debug, Clone)]
 pub struct BackgroundColorLens {

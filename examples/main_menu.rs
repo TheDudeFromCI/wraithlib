@@ -53,6 +53,10 @@ fn main() {
             }),
             multiplayer_screen: Some(MultiplayerScreenProperties {
                 bg_img_path: "images/menu/serverlist.png".into(),
+                add_server_button: ImageProperties {
+                    img_path: "images/menu/buttons/add_server.png".into(),
+                    img_size: Vec2::new(200.0, 50.0),
+                },
                 back_button: ImageProperties {
                     img_path: "images/menu/buttons/back.png".into(),
                     img_size: Vec2::new(200.0, 50.0),

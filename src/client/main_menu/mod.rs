@@ -4,7 +4,6 @@ mod components;
 mod events;
 mod resources;
 mod systems;
-mod ui;
 mod view;
 
 pub use components::*;
@@ -23,11 +22,12 @@ impl Plugin for MainMenuPlugin {
             .add_event::<OpenMultiplayerScreenEvent>()
             .add_event::<OpenSettingsScreenEvent>()
             .add_event::<OpenCreditsScreenEvent>()
+            .add_event::<AddServerEntry>()
             .add_systems(
                 OnEnter(ClientGameState::MainMenu),
                 (systems::init_main_menu, view::build_ui),
             )
-            .add_systems(OnExit(ClientGameState::MainMenu), ui::cleanup)
+            .add_systems(OnExit(ClientGameState::MainMenu), view::cleanup)
             .add_systems(
                 Update,
                 (
@@ -37,12 +37,14 @@ impl Plugin for MainMenuPlugin {
                     systems::credits_button,
                     systems::quit_button,
                     systems::back_button,
-                    ui::button_hover,
-                    ui::show_title_screen,
-                    ui::show_single_player_screen,
-                    ui::show_multiplayer_screen,
-                    ui::show_settings_screen,
-                    ui::show_credits_screen,
+                    systems::add_server_button,
+                    view::button_hover,
+                    view::show_title_screen,
+                    view::show_single_player_screen,
+                    view::show_multiplayer_screen,
+                    view::show_settings_screen,
+                    view::show_credits_screen,
+                    view::add_server_entry,
                 )
                     .run_if(in_state(ClientGameState::MainMenu)),
             );

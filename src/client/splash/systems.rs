@@ -6,7 +6,7 @@ use bevy_tweening::{Animator, Delay};
 use crate::client::gamestates::ClientGameState;
 use crate::client::loading_screen::TransitionToState;
 use crate::client::splash::{SplashImageView, SplashImages};
-use crate::client::ui_animations::{BackgroundColorLens, FadeInOut};
+use crate::client::ui::{BackgroundColorLens, FadeInOut};
 
 pub(super) fn build_splash(
     time: Res<Time>,

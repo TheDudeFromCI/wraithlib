@@ -6,7 +6,7 @@ use bevy_tweening::{Animator, EaseFunction, Tween};
 use super::{LoadingScreenBG, LoadingScreenFG, LoadingScreenProperties, LoadingScreenUI};
 use crate::client::gamestates::ClientGameState;
 use crate::client::loading_screen::{ActiveLoadingScreen, LoadingState, TransitionToState};
-use crate::client::ui_animations::BackgroundColorLens;
+use crate::client::ui::BackgroundColorLens;
 
 pub(super) fn preload_loading_img(
     asset_server: Res<AssetServer>,

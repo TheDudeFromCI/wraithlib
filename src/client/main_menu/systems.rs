@@ -1,20 +1,7 @@
 use bevy::app::AppExit;
 use bevy::prelude::*;
 
-use super::{
-    BackButton,
-    CreditsButton,
-    MainMenuState,
-    MultiplayerButton,
-    OpenCreditsScreenEvent,
-    OpenMultiplayerScreenEvent,
-    OpenSettingsScreenEvent,
-    OpenSinglePlayerScreenEvent,
-    OpenTitleScreenEvent,
-    QuitButton,
-    SettingsButton,
-    SinglePlayerButton,
-};
+use super::*;
 
 pub(super) fn init_main_menu(mut next_state: ResMut<NextState<MainMenuState>>) {
     next_state.set(MainMenuState::TitleScreen);
@@ -92,6 +79,17 @@ pub(super) fn quit_button(
     for ev in interactions.iter() {
         if let Interaction::Pressed = *ev {
             exit_events.send(AppExit);
+        }
+    }
+}
+
+pub(super) fn add_server_button(
+    interactions: Query<&Interaction, (Changed<Interaction>, With<AddServerButton>)>,
+    mut add_server_entry_evs: EventWriter<AddServerEntry>,
+) {
+    for ev in interactions.iter() {
+        if let Interaction::Pressed = *ev {
+            add_server_entry_evs.send(AddServerEntry);
         }
     }
 }

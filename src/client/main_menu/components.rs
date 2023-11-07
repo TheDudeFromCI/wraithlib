@@ -19,6 +19,12 @@ pub struct SettingsScreen;
 pub struct CreditsScreen;
 
 #[derive(Debug, Component)]
+pub struct ServerListPane;
+
+#[derive(Debug, Component)]
+pub struct ServerListEntry;
+
+#[derive(Debug, Component)]
 pub struct SinglePlayerButton;
 
 #[derive(Debug, Component)]
@@ -41,3 +47,6 @@ pub struct NewGameButton;
 
 #[derive(Debug, Component)]
 pub struct LoadGameButton;
+
+#[derive(Debug, Component)]
+pub struct AddServerButton;

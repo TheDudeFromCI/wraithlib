@@ -6,14 +6,14 @@ use crate::client::gamestates::ClientGameStatePlugin;
 use crate::client::loading_screen::LoadingScreenPlugin;
 use crate::client::main_menu::MainMenuPlugin;
 use crate::client::splash::SplashPlugin;
-use crate::client::ui_animations::UiAnimationsPlugin;
+use crate::client::ui::UiPlugin;
 
 pub mod camera;
 pub mod gamestates;
 pub mod loading_screen;
 pub mod main_menu;
 pub mod splash;
-pub mod ui_animations;
+pub mod ui;
 
 #[cfg(feature = "networking")]
 pub mod networking;
@@ -29,7 +29,7 @@ impl PluginGroup for ClientPlugins {
             .add(LoadingScreenPlugin::default())
             .add(MainMenuPlugin)
             .add(SplashPlugin::default())
-            .add(UiAnimationsPlugin);
+            .add(UiPlugin);
 
         #[cfg(feature = "networking")]
         {

@@ -30,6 +30,7 @@ pub struct SinglePlayerScreenProperties {
 #[derive(Debug, Clone)]
 pub struct MultiplayerScreenProperties {
     pub bg_img_path: String,
+    pub add_server_button: ImageProperties,
     pub back_button: ImageProperties,
 }
 
