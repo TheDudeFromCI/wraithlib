@@ -186,7 +186,7 @@ pub(super) fn build_ui(
 
                     let button = &screen.back_button;
                     p.spawn((
-                        BackButton,
+                        BackToTitleScreenButton,
                         ButtonBundle {
                             style: Style {
                                 width: Val::Px(button.img_size.x),
@@ -289,7 +289,7 @@ pub(super) fn build_ui(
 
                         let button = &screen.back_button;
                         p.spawn((
-                            BackButton,
+                            BackToTitleScreenButton,
                             ButtonBundle {
                                 style: Style {
                                     width: Val::Px(button.img_size.x),
@@ -301,6 +301,54 @@ pub(super) fn build_ui(
                             },
                         ));
                     });
+                });
+            });
+
+        let screen = &screen.edit_server_screen;
+        commands
+            .spawn((
+                MainMenuScreen,
+                EditServerScreen,
+                ImageBundle {
+                    style: bg_style.clone(),
+                    image: asset_server.load(&screen.bg_img_path).into(),
+                    ..default()
+                },
+            ))
+            .with_children(|p| {
+                p.spawn(NodeBundle {
+                    style: btn_col_style.clone(),
+                    background_color: Color::NONE.into(),
+                    ..default()
+                })
+                .with_children(|p| {
+                    let button = &screen.confirm_button;
+                    p.spawn((
+                        ConfirmEditServerButton,
+                        ButtonBundle {
+                            style: Style {
+                                width: Val::Px(button.img_size.x),
+                                height: Val::Px(button.img_size.y),
+                                ..btn_style.clone()
+                            },
+                            image: asset_server.load(&button.img_path).into(),
+                            ..default()
+                        },
+                    ));
+
+                    let button = &screen.back_button;
+                    p.spawn((
+                        BackToMultiplayerButton,
+                        ButtonBundle {
+                            style: Style {
+                                width: Val::Px(button.img_size.x),
+                                height: Val::Px(button.img_size.y),
+                                ..btn_style.clone()
+                            },
+                            image: asset_server.load(&button.img_path).into(),
+                            ..default()
+                        },
+                    ));
                 });
             });
     }
@@ -325,7 +373,7 @@ pub(super) fn build_ui(
                 .with_children(|p| {
                     let button = &screen.back_button;
                     p.spawn((
-                        BackButton,
+                        BackToTitleScreenButton,
                         ButtonBundle {
                             style: Style {
                                 width: Val::Px(button.img_size.x),
@@ -360,7 +408,7 @@ pub(super) fn build_ui(
                 .with_children(|p| {
                     let button = &screen.back_button;
                     p.spawn((
-                        BackButton,
+                        BackToTitleScreenButton,
                         ButtonBundle {
                             style: Style {
                                 width: Val::Px(button.img_size.x),
@@ -499,6 +547,22 @@ pub(super) fn show_credits_screen(
     mut ui_to_close: Query<&mut Style, (With<MainMenuScreen>, Without<CreditsScreen>)>,
     mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<CreditsScreen>)>,
     mut open_screen_evs: EventReader<OpenCreditsScreenEvent>,
+) {
+    for _ in open_screen_evs.iter() {
+        for mut style in ui_to_close.iter_mut() {
+            style.display = Display::None;
+        }
+
+        for mut style in ui_to_open.iter_mut() {
+            style.display = Display::Flex;
+        }
+    }
+}
+
+pub(super) fn show_edit_server_screen(
+    mut ui_to_close: Query<&mut Style, (With<MainMenuScreen>, Without<EditServerScreen>)>,
+    mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<EditServerScreen>)>,
+    mut open_screen_evs: EventReader<OpenEditServerScreenEvent>,
 ) {
     for _ in open_screen_evs.iter() {
         for mut style in ui_to_close.iter_mut() {

@@ -60,7 +60,7 @@ pub(super) fn credits_button(
 }
 
 pub(super) fn back_button(
-    interactions: Query<&Interaction, (Changed<Interaction>, With<BackButton>)>,
+    interactions: Query<&Interaction, (Changed<Interaction>, With<BackToTitleScreenButton>)>,
     mut next_state: ResMut<NextState<MainMenuState>>,
     mut show_screen_evs: EventWriter<OpenTitleScreenEvent>,
 ) {
@@ -85,11 +85,26 @@ pub(super) fn quit_button(
 
 pub(super) fn add_server_button(
     interactions: Query<&Interaction, (Changed<Interaction>, With<AddServerButton>)>,
-    mut add_server_entry_evs: EventWriter<AddServerEntry>,
+    mut next_state: ResMut<NextState<MainMenuState>>,
+    mut show_screen_evs: EventWriter<OpenEditServerScreenEvent>,
 ) {
     for ev in interactions.iter() {
         if let Interaction::Pressed = *ev {
-            add_server_entry_evs.send(AddServerEntry);
+            next_state.set(MainMenuState::EditServerScreen);
+            show_screen_evs.send(OpenEditServerScreenEvent);
+        }
+    }
+}
+
+pub(super) fn back_to_multiplayer_button(
+    interactions: Query<&Interaction, (Changed<Interaction>, With<BackToMultiplayerButton>)>,
+    mut next_state: ResMut<NextState<MainMenuState>>,
+    mut show_screen_evs: EventWriter<OpenMultiplayerScreenEvent>,
+) {
+    for ev in interactions.iter() {
+        if let Interaction::Pressed = *ev {
+            next_state.set(MainMenuState::MultiplayerScreen);
+            show_screen_evs.send(OpenMultiplayerScreenEvent);
         }
     }
 }

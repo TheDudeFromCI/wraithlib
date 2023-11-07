@@ -1,6 +1,7 @@
 use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
 use wraithlib::client::main_menu::{
+    EditServerScreenProperties,
     ImageProperties,
     MainMenuProperties,
     MultiplayerScreenProperties,
@@ -37,6 +38,17 @@ pub fn run() {
                 back_button: ImageProperties {
                     img_path: "images/menu/buttons/back.png".into(),
                     img_size: Vec2::new(200.0, 50.0),
+                },
+                edit_server_screen: EditServerScreenProperties {
+                    bg_img_path: "images/menu/serverlist.png".into(),
+                    confirm_button: ImageProperties {
+                        img_path: "images/menu/buttons/confirm.png".into(),
+                        img_size: Vec2::new(200.0, 50.0),
+                    },
+                    back_button: ImageProperties {
+                        img_path: "images/menu/buttons/back.png".into(),
+                        img_size: Vec2::new(200.0, 50.0),
+                    },
                 },
             }),
             settings_screen: None,

@@ -32,6 +32,7 @@ pub struct MultiplayerScreenProperties {
     pub bg_img_path: String,
     pub add_server_button: ImageProperties,
     pub back_button: ImageProperties,
+    pub edit_server_screen: EditServerScreenProperties,
 }
 
 #[derive(Debug, Clone)]
@@ -43,6 +44,13 @@ pub struct SettingsScreenProperties {
 #[derive(Debug, Clone)]
 pub struct CreditsScreenProperties {
     pub bg_img_path: String,
+    pub back_button: ImageProperties,
+}
+
+#[derive(Debug, Clone)]
+pub struct EditServerScreenProperties {
+    pub bg_img_path: String,
+    pub confirm_button: ImageProperties,
     pub back_button: ImageProperties,
 }
 
@@ -60,4 +68,5 @@ pub enum MainMenuState {
     MultiplayerScreen,
     SettingsScreen,
     CreditsScreen,
+    EditServerScreen,
 }

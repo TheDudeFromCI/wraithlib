@@ -16,4 +16,7 @@ pub struct OpenSettingsScreenEvent;
 pub struct OpenCreditsScreenEvent;
 
 #[derive(Debug, Event)]
+pub struct OpenEditServerScreenEvent;
+
+#[derive(Debug, Event)]
 pub struct AddServerEntry;

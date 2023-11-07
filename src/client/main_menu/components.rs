@@ -19,6 +19,9 @@ pub struct SettingsScreen;
 pub struct CreditsScreen;
 
 #[derive(Debug, Component)]
+pub struct EditServerScreen;
+
+#[derive(Debug, Component)]
 pub struct ServerListPane;
 
 #[derive(Debug, Component)]
@@ -40,7 +43,7 @@ pub struct CreditsButton;
 pub struct QuitButton;
 
 #[derive(Debug, Component)]
-pub struct BackButton;
+pub struct BackToTitleScreenButton;
 
 #[derive(Debug, Component)]
 pub struct NewGameButton;
@@ -50,3 +53,9 @@ pub struct LoadGameButton;
 
 #[derive(Debug, Component)]
 pub struct AddServerButton;
+
+#[derive(Debug, Component)]
+pub struct ConfirmEditServerButton;
+
+#[derive(Debug, Component)]
+pub struct BackToMultiplayerButton;

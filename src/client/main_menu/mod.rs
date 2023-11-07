@@ -22,6 +22,7 @@ impl Plugin for MainMenuPlugin {
             .add_event::<OpenMultiplayerScreenEvent>()
             .add_event::<OpenSettingsScreenEvent>()
             .add_event::<OpenCreditsScreenEvent>()
+            .add_event::<OpenEditServerScreenEvent>()
             .add_event::<AddServerEntry>()
             .add_systems(
                 OnEnter(ClientGameState::MainMenu),
@@ -38,12 +39,14 @@ impl Plugin for MainMenuPlugin {
                     systems::quit_button,
                     systems::back_button,
                     systems::add_server_button,
+                    systems::back_to_multiplayer_button,
                     view::button_hover,
                     view::show_title_screen,
                     view::show_single_player_screen,
                     view::show_multiplayer_screen,
                     view::show_settings_screen,
                     view::show_credits_screen,
+                    view::show_edit_server_screen,
                     view::add_server_entry,
                 )
                     .run_if(in_state(ClientGameState::MainMenu)),
