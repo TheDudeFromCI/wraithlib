@@ -2,6 +2,7 @@
 name = "wraithlib"
 version = "0.1.0"
 edition = "2021"
+exclude = ["/assets", "/saves", "/examples"]
 
 [dependencies]
 bevy = { version = "0.11.0", default-features = false }
