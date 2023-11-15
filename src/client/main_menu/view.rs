@@ -322,6 +322,7 @@ pub(super) fn build_ui(
                         flex_direction: FlexDirection::Column,
                         width: Val::Auto,
                         height: Val::Auto,
+                        border: UiRect::all(Val::Px(2.0)),
                         ..btn_col_style.clone()
                     },
                     background_color: Color::NONE.into(),
@@ -329,13 +330,14 @@ pub(super) fn build_ui(
                     ..default()
                 })
                 .with_children(|p| {
+                    // Server name
                     p.spawn((
                         NodeBundle {
                             style: Style {
                                 width: Val::Px(400.0),
                                 height: Val::Px(40.0),
-                                border: UiRect::all(Val::Px(1.0)),
                                 padding: UiRect::all(Val::Px(5.0)),
+                                border: UiRect::all(Val::Px(1.0)),
                                 ..center.clone()
                             },
                             background_color: Color::WHITE.into(),
@@ -348,37 +350,75 @@ pub(super) fn build_ui(
                                 color: Color::BLACK,
                                 ..default()
                             },
-                            ..default()
+                            inactive: true,
                         },
                     ));
 
-                    let button = &screen.confirm_button;
+                    // Server ip
                     p.spawn((
-                        ConfirmEditServerButton,
-                        ButtonBundle {
+                        NodeBundle {
                             style: Style {
-                                width: Val::Px(button.img_size.x),
-                                height: Val::Px(button.img_size.y),
-                                ..btn_style.clone()
+                                width: Val::Px(400.0),
+                                height: Val::Px(40.0),
+                                padding: UiRect::all(Val::Px(5.0)),
+                                margin: UiRect::top(Val::Px(10.0)),
+                                border: UiRect::all(Val::Px(1.0)),
+                                ..center.clone()
                             },
-                            image: asset_server.load(&button.img_path).into(),
+                            background_color: Color::WHITE.into(),
+                            border_color: BorderColor(Color::BLACK),
                             ..default()
+                        },
+                        TextInput {
+                            text_style: TextStyle {
+                                font_size: 26.0,
+                                color: Color::BLACK,
+                                ..default()
+                            },
+                            inactive: true,
                         },
                     ));
 
-                    let button = &screen.back_button;
-                    p.spawn((
-                        BackToMultiplayerButton,
-                        ButtonBundle {
-                            style: Style {
-                                width: Val::Px(button.img_size.x),
-                                height: Val::Px(button.img_size.y),
-                                ..btn_style.clone()
-                            },
-                            image: asset_server.load(&button.img_path).into(),
-                            ..default()
+                    p.spawn(NodeBundle {
+                        style: Style {
+                            flex_direction: FlexDirection::Row,
+                            width: Val::Px(400.0),
+                            height: Val::Px(60.0),
+                            padding: UiRect::all(Val::Px(5.0)),
+                            margin: UiRect::top(Val::Px(10.0)),
+                            ..center.clone()
                         },
-                    ));
+                        ..default()
+                    })
+                    .with_children(|p| {
+                        let button = &screen.confirm_button;
+                        p.spawn((
+                            ConfirmEditServerButton,
+                            ButtonBundle {
+                                style: Style {
+                                    width: Val::Px(button.img_size.x),
+                                    height: Val::Px(button.img_size.y),
+                                    ..btn_style.clone()
+                                },
+                                image: asset_server.load(&button.img_path).into(),
+                                ..default()
+                            },
+                        ));
+
+                        let button = &screen.back_button;
+                        p.spawn((
+                            BackToMultiplayerButton,
+                            ButtonBundle {
+                                style: Style {
+                                    width: Val::Px(button.img_size.x),
+                                    height: Val::Px(button.img_size.y),
+                                    ..btn_style.clone()
+                                },
+                                image: asset_server.load(&button.img_path).into(),
+                                ..default()
+                            },
+                        ));
+                    });
                 });
             });
     }
@@ -601,6 +641,18 @@ pub(super) fn show_edit_server_screen(
 
         for mut style in ui_to_open.iter_mut() {
             style.display = Display::Flex;
+        }
+    }
+}
+pub(super) fn text_focus_handler(
+    query: Query<(Entity, &Interaction), Changed<Interaction>>,
+    mut text_input_query: Query<(Entity, &mut TextInput)>,
+) {
+    for (interaction_entity, interaction) in &query {
+        if *interaction == Interaction::Pressed {
+            for (entity, mut text_input) in &mut text_input_query {
+                text_input.inactive = entity != interaction_entity;
+            }
         }
     }
 }

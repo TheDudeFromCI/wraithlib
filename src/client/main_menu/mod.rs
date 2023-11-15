@@ -48,6 +48,7 @@ impl Plugin for MainMenuPlugin {
                     view::show_credits_screen,
                     view::show_edit_server_screen,
                     view::add_server_entry,
+                    view::text_focus_handler,
                 )
                     .run_if(in_state(ClientGameState::MainMenu)),
             );
