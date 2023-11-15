@@ -24,17 +24,24 @@ const CURSOR_HANDLE: Handle<Font> = Handle::weak_from_u128(10482756907980398621)
 #[derive(Component, Default)]
 pub struct TextInput {
     pub text_style: TextStyle,
-    /// The text input does not respond to keyboard events
     pub inactive: bool,
 }
+
 #[derive(Component)]
 struct TextInputInner;
 
 #[derive(Component)]
-struct CursorTimer(Timer);
+struct CursorTimer {
+    timer: Timer,
+    was_inactive: bool,
+}
+
 impl Default for CursorTimer {
     fn default() -> Self {
-        Self(Timer::from_seconds(0.5, TimerMode::Repeating))
+        Self {
+            timer: Timer::from_seconds(0.5, TimerMode::Repeating),
+            was_inactive: true,
+        }
     }
 }
 
@@ -188,7 +195,10 @@ fn cursor(
     time: Res<Time>,
 ) {
     for (entity, text_input, mut timer) in &mut input_query {
-        if !timer.0.tick(time.delta()).just_finished() {
+        if timer.was_inactive != text_input.inactive {
+            timer.was_inactive = text_input.inactive;
+            timer.timer.reset();
+        } else if !timer.timer.tick(time.delta()).just_finished() {
             continue;
         }
 
