@@ -26,7 +26,7 @@ pub(super) fn trigger_transition_to_state(
     mut next_state: ResMut<NextState<LoadingState>>,
     mut events: EventReader<TransitionToState>,
 ) {
-    for ev in events.iter().take(1) {
+    for ev in events.read().take(1) {
         active_loading.state = ev.state;
         active_loading.fade_time_end = time.elapsed_seconds() + properties.fade_in_time;
         next_state.set(LoadingState::StartingLoad);

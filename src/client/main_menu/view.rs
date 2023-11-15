@@ -503,7 +503,7 @@ pub(super) fn add_server_entry(
         return;
     };
 
-    for _ in add_server_evs.iter() {
+    for _ in add_server_evs.read() {
         commands
             .spawn((
                 ServerListEntry,
@@ -554,7 +554,7 @@ pub(super) fn show_title_screen(
     mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<TitleScreen>)>,
     mut open_screen_evs: EventReader<OpenTitleScreenEvent>,
 ) {
-    for _ in open_screen_evs.iter() {
+    for _ in open_screen_evs.read() {
         for mut style in ui_to_close.iter_mut() {
             style.display = Display::None;
         }
@@ -570,7 +570,7 @@ pub(super) fn show_single_player_screen(
     mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<SinglePlayerScreen>)>,
     mut open_screen_evs: EventReader<OpenSinglePlayerScreenEvent>,
 ) {
-    for _ in open_screen_evs.iter() {
+    for _ in open_screen_evs.read() {
         for mut style in ui_to_close.iter_mut() {
             style.display = Display::None;
         }
@@ -586,7 +586,7 @@ pub(super) fn show_multiplayer_screen(
     mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<MultiplayerScreen>)>,
     mut open_screen_evs: EventReader<OpenMultiplayerScreenEvent>,
 ) {
-    for _ in open_screen_evs.iter() {
+    for _ in open_screen_evs.read() {
         for mut style in ui_to_close.iter_mut() {
             style.display = Display::None;
         }
@@ -602,7 +602,7 @@ pub(super) fn show_settings_screen(
     mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<SettingsScreen>)>,
     mut open_screen_evs: EventReader<OpenSettingsScreenEvent>,
 ) {
-    for _ in open_screen_evs.iter() {
+    for _ in open_screen_evs.read() {
         for mut style in ui_to_close.iter_mut() {
             style.display = Display::None;
         }
@@ -618,7 +618,7 @@ pub(super) fn show_credits_screen(
     mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<CreditsScreen>)>,
     mut open_screen_evs: EventReader<OpenCreditsScreenEvent>,
 ) {
-    for _ in open_screen_evs.iter() {
+    for _ in open_screen_evs.read() {
         for mut style in ui_to_close.iter_mut() {
             style.display = Display::None;
         }
@@ -634,7 +634,7 @@ pub(super) fn show_edit_server_screen(
     mut ui_to_open: Query<&mut Style, (With<MainMenuScreen>, With<EditServerScreen>)>,
     mut open_screen_evs: EventReader<OpenEditServerScreenEvent>,
 ) {
-    for _ in open_screen_evs.iter() {
+    for _ in open_screen_evs.read() {
         for mut style in ui_to_close.iter_mut() {
             style.display = Display::None;
         }

@@ -65,18 +65,21 @@ fn build_socket(ip: &str, max_clients: usize) -> (RenetServer, NetcodeServerTran
     let socket = UdpSocket::bind(public_addr).unwrap();
     let protocol_id = *PROTOCOL_ID;
 
-    let config = ServerConfig {
-        max_clients,
-        protocol_id,
-        public_addr,
-        authentication: ServerAuthentication::Unsecure,
-    };
-
-    let time = SystemTime::now()
+    let current_time = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
         .unwrap();
 
-    let transport = NetcodeServerTransport::new(time, config, socket).unwrap();
+    let authentication = ServerAuthentication::Unsecure;
+
+    let config = ServerConfig {
+        max_clients,
+        protocol_id,
+        authentication,
+        current_time,
+        public_addresses: vec![public_addr],
+    };
+
+    let transport = NetcodeServerTransport::new(config, socket).unwrap();
 
     (server, transport)
 }

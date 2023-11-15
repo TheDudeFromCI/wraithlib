@@ -17,7 +17,7 @@ pub(super) fn connect_to_server(
     mut next_state: ResMut<NextState<NetworkState>>,
     mut commands: Commands,
 ) {
-    for event in events_conn_to_server.iter().take(1) {
+    for event in events_conn_to_server.read().take(1) {
         let ip = &event
             .ip
             .to_socket_addrs()
@@ -53,12 +53,12 @@ pub(super) fn connect_to_server(
 }
 
 pub(super) fn wait_for_connection(
-    transport: Res<NetcodeClientTransport>,
+    client: Res<RenetClient>,
     mut events: EventWriter<JoinedServerEvent>,
     mut next_state: ResMut<NextState<NetworkState>>,
     mut game_state: ResMut<NextState<ClientGameState>>,
 ) {
-    if transport.is_connected() {
+    if client.is_connected() {
         next_state.set(NetworkState::Connected);
         game_state.set(ClientGameState::BuildingWorld);
         events.send(JoinedServerEvent);
@@ -68,13 +68,13 @@ pub(super) fn wait_for_connection(
 
 pub(super) fn handle_broken_connection(
     current_state: Res<State<NetworkState>>,
-    transport: Res<NetcodeClientTransport>,
+    client: Res<RenetClient>,
     mut failed_con_events: EventWriter<CouldNotConnectToServerEvent>,
     mut disconnected_events: EventWriter<DisconnectedFromServerEvent>,
     mut next_state: ResMut<NextState<NetworkState>>,
     mut game_state: ResMut<NextState<ClientGameState>>,
 ) {
-    if transport.is_disconnected() {
+    if client.is_disconnected() {
         if *current_state == NetworkState::Connecting {
             failed_con_events.send(CouldNotConnectToServerEvent);
             debug!("Client failed to connect to server.");
@@ -89,7 +89,7 @@ pub(super) fn handle_broken_connection(
 }
 
 pub(super) fn send_packet(mut client: ResMut<RenetClient>, mut events: EventReader<SendPacket>) {
-    for ev in events.iter() {
+    for ev in events.read() {
         let Some(message) = ev.serialize() else {
             warn!("Failed to serialize packet!");
             continue;
@@ -118,7 +118,7 @@ pub(super) fn close_connection_on_exit(
     mut transport: ResMut<NetcodeClientTransport>,
     mut next_state: ResMut<NextState<NetworkState>>,
 ) {
-    if app_exit_evs.iter().next().is_none() {
+    if app_exit_evs.read().next().is_none() {
         return;
     }
 

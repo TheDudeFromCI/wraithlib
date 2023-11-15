@@ -19,7 +19,7 @@ pub(super) fn server_event_handler(
     mut disconnected_events: EventWriter<ClientDisconnectedEvent>,
     mut commands: Commands,
 ) {
-    for event in server_events.iter() {
+    for event in server_events.read() {
         match event {
             ServerEvent::ClientConnected { client_id } => {
                 let id = commands.spawn((ClientConnection::new(*client_id),)).id();
@@ -50,7 +50,7 @@ pub(super) fn server_event_handler(
 }
 
 pub(super) fn send_packet(mut server: ResMut<RenetServer>, mut events: EventReader<SendPacket>) {
-    for ev in events.iter() {
+    for ev in events.read() {
         if !server.is_connected(ev.client_id) {
             continue;
         }
@@ -82,7 +82,7 @@ pub(super) fn receive_packets(
 }
 
 pub(super) fn error_handling(mut renet_error: EventReader<NetcodeTransportError>) {
-    for e in renet_error.iter() {
+    for e in renet_error.read() {
         error!("Networking Error: {}", e);
     }
 }
@@ -92,7 +92,7 @@ pub(super) fn close_connections_on_exit(
     mut server: ResMut<RenetServer>,
     mut transport: ResMut<NetcodeServerTransport>,
 ) {
-    if app_exit_evs.iter().next().is_none() {
+    if app_exit_evs.read().next().is_none() {
         return;
     }
     server.disconnect_all();
