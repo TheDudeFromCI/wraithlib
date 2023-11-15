@@ -1,8 +1,7 @@
 use bevy::prelude::*;
-use bevy_simple_text_input::TextInput;
 
 use super::*;
-use crate::client::ui::ScrollPane;
+use crate::client::ui::{ScrollPane, TextInput};
 
 pub(super) fn build_ui(
     properties: Res<MainMenuProperties>,

@@ -32,7 +32,10 @@ fn main() {
                     img_path: "images/menu/buttons/settings.png".into(),
                     img_size: Vec2::new(200.0, 50.0),
                 }),
-                credits_button: None,
+                credits_button: Some(ImageProperties {
+                    img_path: "images/menu/buttons/credits.png".into(),
+                    img_size: Vec2::new(200.0, 50.0),
+                }),
                 quit_button: Some(ImageProperties {
                     img_path: "images/menu/buttons/quit.png".into(),
                     img_size: Vec2::new(200.0, 50.0),

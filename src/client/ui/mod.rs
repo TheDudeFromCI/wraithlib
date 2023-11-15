@@ -1,12 +1,13 @@
 use bevy::prelude::*;
-use bevy_simple_text_input::TextInputPlugin;
 use bevy_tweening::TweeningPlugin;
 
 mod scroll_pane;
+mod text_input;
 mod tweening;
 
 pub use bevy_tweening;
 pub use scroll_pane::*;
+pub use text_input::*;
 pub use tweening::*;
 
 pub struct UiPlugin;
