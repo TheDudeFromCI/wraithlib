@@ -2,6 +2,7 @@ use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
 use wraithlib::client::loading_screen::{LoadingScreenPlugin, LoadingScreenProperties};
 use wraithlib::client::main_menu::{
+    CreditsScreenProperties,
     EditServerScreenProperties,
     ImageProperties,
     MainMenuProperties,
@@ -81,7 +82,13 @@ fn main() {
                     img_size: Vec2::new(200.0, 50.0),
                 },
             }),
-            credits_screen: None,
+            credits_screen: Some(CreditsScreenProperties {
+                bg_img_path: "images/menu/settings.png".into(),
+                back_button: ImageProperties {
+                    img_path: "images/menu/buttons/back.png".into(),
+                    img_size: Vec2::new(200.0, 50.0),
+                },
+            }),
         })
         .add_plugins(
             DefaultPlugins
