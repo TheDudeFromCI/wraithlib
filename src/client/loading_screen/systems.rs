@@ -3,7 +3,13 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy_tweening::{Animator, EaseFunction, Tween};
 
-use super::{LoadingScreenBG, LoadingScreenFG, LoadingScreenProperties, LoadingScreenUI};
+use super::{
+    AssetsWaitForLoad,
+    LoadingScreenBG,
+    LoadingScreenFG,
+    LoadingScreenProperties,
+    LoadingScreenUI,
+};
 use crate::client::gamestates::ClientGameState;
 use crate::client::loading_screen::{ActiveLoadingScreen, LoadingState, TransitionToState};
 use crate::client::ui::BackgroundColorLens;
@@ -176,4 +182,11 @@ pub(super) fn clear_loading_screen(
     for entity in ui.iter() {
         commands.entity(entity).despawn_recursive();
     }
+}
+
+pub(super) fn update_asset_queue(
+    asset_server: Res<AssetServer>,
+    mut asset_queue: ResMut<AssetsWaitForLoad>,
+) {
+    asset_queue.remove_finished(&asset_server);
 }

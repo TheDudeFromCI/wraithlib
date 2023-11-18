@@ -1,13 +1,17 @@
 use bevy::prelude::*;
 
 use super::*;
+use crate::client::loading_screen::AssetsWaitForLoad;
 use crate::client::ui::{ScrollPane, TextInput};
 
 pub(super) fn build_ui(
     properties: Res<MainMenuProperties>,
     asset_server: Res<AssetServer>,
+    mut asset_queue: ResMut<AssetsWaitForLoad>,
     mut commands: Commands,
 ) {
+    let mut loader = asset_queue.with_server(&asset_server);
+
     let center = Style {
         flex_direction: FlexDirection::Column,
         justify_content: JustifyContent::Center,
@@ -49,7 +53,7 @@ pub(super) fn build_ui(
                         display: Display::Flex,
                         ..bg_style.clone()
                     },
-                    image: asset_server.load(&screen.bg_img_path).into(),
+                    image: loader.load(&screen.bg_img_path).into(),
                     ..default()
                 },
             ))
@@ -69,7 +73,7 @@ pub(super) fn build_ui(
                                     height: Val::Px(button.img_size.y),
                                     ..btn_style.clone()
                                 },
-                                image: asset_server.load(&button.img_path).into(),
+                                image: loader.load(&button.img_path).into(),
                                 ..default()
                             },
                         ));
@@ -84,7 +88,7 @@ pub(super) fn build_ui(
                                     height: Val::Px(button.img_size.y),
                                     ..btn_style.clone()
                                 },
-                                image: asset_server.load(&button.img_path).into(),
+                                image: loader.load(&button.img_path).into(),
                                 ..default()
                             },
                         ));
@@ -99,7 +103,7 @@ pub(super) fn build_ui(
                                     height: Val::Px(button.img_size.y),
                                     ..btn_style.clone()
                                 },
-                                image: asset_server.load(&button.img_path).into(),
+                                image: loader.load(&button.img_path).into(),
                                 ..default()
                             },
                         ));
@@ -114,7 +118,7 @@ pub(super) fn build_ui(
                                     height: Val::Px(button.img_size.y),
                                     ..btn_style.clone()
                                 },
-                                image: asset_server.load(&button.img_path).into(),
+                                image: loader.load(&button.img_path).into(),
                                 ..default()
                             },
                         ));
@@ -129,7 +133,7 @@ pub(super) fn build_ui(
                                     height: Val::Px(button.img_size.y),
                                     ..btn_style.clone()
                                 },
-                                image: asset_server.load(&button.img_path).into(),
+                                image: loader.load(&button.img_path).into(),
                                 ..default()
                             },
                         ));
@@ -145,7 +149,7 @@ pub(super) fn build_ui(
                 SinglePlayerScreen,
                 ImageBundle {
                     style: bg_style.clone(),
-                    image: asset_server.load(&screen.bg_img_path).into(),
+                    image: loader.load(&screen.bg_img_path).into(),
                     ..default()
                 },
             ))
@@ -165,7 +169,7 @@ pub(super) fn build_ui(
                                 height: Val::Px(button.img_size.y),
                                 ..btn_style.clone()
                             },
-                            image: asset_server.load(&button.img_path).into(),
+                            image: loader.load(&button.img_path).into(),
                             ..default()
                         },
                     ));
@@ -179,7 +183,7 @@ pub(super) fn build_ui(
                                 height: Val::Px(button.img_size.y),
                                 ..btn_style.clone()
                             },
-                            image: asset_server.load(&button.img_path).into(),
+                            image: loader.load(&button.img_path).into(),
                             ..default()
                         },
                     ));
@@ -193,7 +197,7 @@ pub(super) fn build_ui(
                                 height: Val::Px(button.img_size.y),
                                 ..btn_style.clone()
                             },
-                            image: asset_server.load(&button.img_path).into(),
+                            image: loader.load(&button.img_path).into(),
                             ..default()
                         },
                     ));
@@ -208,7 +212,7 @@ pub(super) fn build_ui(
                 MultiplayerScreen,
                 ImageBundle {
                     style: bg_style.clone(),
-                    image: asset_server.load(&screen.bg_img_path).into(),
+                    image: loader.load(&screen.bg_img_path).into(),
                     ..default()
                 },
             ))
@@ -282,7 +286,7 @@ pub(super) fn build_ui(
                                     height: Val::Px(button.img_size.y),
                                     ..btn_style.clone()
                                 },
-                                image: asset_server.load(&button.img_path).into(),
+                                image: loader.load(&button.img_path).into(),
                                 ..default()
                             },
                         ));
@@ -296,7 +300,7 @@ pub(super) fn build_ui(
                                     height: Val::Px(button.img_size.y),
                                     ..btn_style.clone()
                                 },
-                                image: asset_server.load(&button.img_path).into(),
+                                image: loader.load(&button.img_path).into(),
                                 ..default()
                             },
                         ));
@@ -311,7 +315,7 @@ pub(super) fn build_ui(
                 EditServerScreen,
                 ImageBundle {
                     style: bg_style.clone(),
-                    image: asset_server.load(&screen.bg_img_path).into(),
+                    image: loader.load(&screen.bg_img_path).into(),
                     ..default()
                 },
             ))
@@ -399,7 +403,7 @@ pub(super) fn build_ui(
                                     height: Val::Px(button.img_size.y),
                                     ..btn_style.clone()
                                 },
-                                image: asset_server.load(&button.img_path).into(),
+                                image: loader.load(&button.img_path).into(),
                                 ..default()
                             },
                         ));
@@ -413,7 +417,7 @@ pub(super) fn build_ui(
                                     height: Val::Px(button.img_size.y),
                                     ..btn_style.clone()
                                 },
-                                image: asset_server.load(&button.img_path).into(),
+                                image: loader.load(&button.img_path).into(),
                                 ..default()
                             },
                         ));
@@ -429,7 +433,7 @@ pub(super) fn build_ui(
                 SettingsScreen,
                 ImageBundle {
                     style: bg_style.clone(),
-                    image: asset_server.load(&screen.bg_img_path).into(),
+                    image: loader.load(&screen.bg_img_path).into(),
                     ..default()
                 },
             ))
@@ -449,7 +453,7 @@ pub(super) fn build_ui(
                                 height: Val::Px(button.img_size.y),
                                 ..btn_style.clone()
                             },
-                            image: asset_server.load(&button.img_path).into(),
+                            image: loader.load(&button.img_path).into(),
                             ..default()
                         },
                     ));
@@ -464,7 +468,7 @@ pub(super) fn build_ui(
                 CreditsScreen,
                 ImageBundle {
                     style: bg_style.clone(),
-                    image: asset_server.load(&screen.bg_img_path).into(),
+                    image: loader.load(&screen.bg_img_path).into(),
                     ..default()
                 },
             ))
@@ -484,7 +488,7 @@ pub(super) fn build_ui(
                                 height: Val::Px(button.img_size.y),
                                 ..btn_style.clone()
                             },
-                            image: asset_server.load(&button.img_path).into(),
+                            image: loader.load(&button.img_path).into(),
                             ..default()
                         },
                     ));
