@@ -1,61 +1,61 @@
 use bevy::prelude::*;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct MainMenuScreen;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct TitleScreen;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct SinglePlayerScreen;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct MultiplayerScreen;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct SettingsScreen;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct CreditsScreen;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct EditServerScreen;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct ServerListPane;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct ServerListEntry;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct SinglePlayerButton;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct MultiplayerButton;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct SettingsButton;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct CreditsButton;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct QuitButton;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct BackToTitleScreenButton;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct NewGameButton;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct LoadGameButton;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct AddServerButton;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct ConfirmEditServerButton;
 
-#[derive(Debug, Component)]
+#[derive(Debug, Default, Component)]
 pub struct BackToMultiplayerButton;

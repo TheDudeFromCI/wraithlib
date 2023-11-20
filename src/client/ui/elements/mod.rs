@@ -4,11 +4,15 @@ mod button;
 mod canvas;
 mod div;
 mod screen;
+mod scroll_pane;
+mod text_input;
 
 pub use button::*;
 pub use canvas::*;
 pub use div::*;
 pub use screen::*;
+pub use scroll_pane::*;
+pub use text_input::*;
 
 use crate::client::assets::AssetLoader;
 
@@ -69,15 +73,25 @@ pub enum ElementDirection {
     Row,
 }
 
-pub trait BoxedElement {
-    fn boxed(self) -> Box<dyn WhElement>;
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum ElementJustify {
+    #[default]
+    Center,
+    Start,
+    End,
 }
 
-impl<T> BoxedElement for T
+pub type BoxedElement = Box<dyn WhElement + Send + Sync>;
+
+pub trait BoxableElement {
+    fn boxed(self) -> BoxedElement;
+}
+
+impl<T> BoxableElement for T
 where
-    T: WhElement + 'static,
+    T: WhElement + Send + Sync + 'static,
 {
-    fn boxed(self) -> Box<dyn WhElement> {
+    fn boxed(self) -> BoxedElement {
         Box::new(self)
     }
 }

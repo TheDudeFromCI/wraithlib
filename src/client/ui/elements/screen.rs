@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::{NodeBackground, WhElement};
+use super::{BoxedElement, NodeBackground, WhElement};
 use crate::client::assets::AssetLoader;
 
 #[derive(Default)]
@@ -11,7 +11,7 @@ where
     pub flags: Flags,
     pub background: NodeBackground,
     pub hidden: bool,
-    pub children: Vec<Box<dyn WhElement>>,
+    pub children: Vec<BoxedElement>,
 }
 
 impl<Flags> WhElement for WhScreen<Flags>
@@ -64,7 +64,12 @@ impl<Flags> WhScreen<Flags>
 where
     Flags: Bundle,
 {
-    pub fn add_children(mut self, mut children: Vec<Box<dyn WhElement>>) -> Self {
+    pub fn set_flags(mut self, flags: Flags) -> Self {
+        self.flags = flags;
+        self
+    }
+
+    pub fn add_children(mut self, mut children: Vec<BoxedElement>) -> Self {
         self.children.append(&mut children);
         self
     }

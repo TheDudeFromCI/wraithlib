@@ -1,63 +1,10 @@
 use bevy::prelude::*;
 
-#[derive(Debug, Default, Resource, Clone)]
+use crate::client::ui::elements::WhCanvas;
+
+#[derive(Default, Resource)]
 pub struct MainMenuProperties {
-    pub title_screen: Option<TitleScreenProperties>,
-    pub single_player_screen: Option<SinglePlayerScreenProperties>,
-    pub multiplayer_screen: Option<MultiplayerScreenProperties>,
-    pub settings_screen: Option<SettingsScreenProperties>,
-    pub credits_screen: Option<CreditsScreenProperties>,
-}
-
-#[derive(Debug, Clone)]
-pub struct TitleScreenProperties {
-    pub bg_img_path: String,
-    pub single_player_button: Option<ImageProperties>,
-    pub multiplayer_button: Option<ImageProperties>,
-    pub settings_button: Option<ImageProperties>,
-    pub credits_button: Option<ImageProperties>,
-    pub quit_button: Option<ImageProperties>,
-}
-
-#[derive(Debug, Clone)]
-pub struct SinglePlayerScreenProperties {
-    pub bg_img_path: String,
-    pub new_game_button: ImageProperties,
-    pub load_game_button: ImageProperties,
-    pub back_button: ImageProperties,
-}
-
-#[derive(Debug, Clone)]
-pub struct MultiplayerScreenProperties {
-    pub bg_img_path: String,
-    pub add_server_button: ImageProperties,
-    pub back_button: ImageProperties,
-    pub edit_server_screen: EditServerScreenProperties,
-}
-
-#[derive(Debug, Clone)]
-pub struct SettingsScreenProperties {
-    pub bg_img_path: String,
-    pub back_button: ImageProperties,
-}
-
-#[derive(Debug, Clone)]
-pub struct CreditsScreenProperties {
-    pub bg_img_path: String,
-    pub back_button: ImageProperties,
-}
-
-#[derive(Debug, Clone)]
-pub struct EditServerScreenProperties {
-    pub bg_img_path: String,
-    pub confirm_button: ImageProperties,
-    pub back_button: ImageProperties,
-}
-
-#[derive(Debug, Clone)]
-pub struct ImageProperties {
-    pub img_path: String,
-    pub img_size: Vec2,
+    pub canvas: WhCanvas,
 }
 
 #[derive(Debug, Default, States, PartialEq, Eq, Clone, Copy, Hash)]

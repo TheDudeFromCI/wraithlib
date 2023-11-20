@@ -140,6 +140,11 @@ fn create(mut commands: Commands, query: Query<(Entity, &TextInput), Added<TextI
         let text = commands
             .spawn((
                 TextBundle {
+                    style: Style {
+                        align_content: AlignContent::Center,
+                        align_self: AlignSelf::Center,
+                        ..default()
+                    },
                     text: Text {
                         linebreak_behavior: BreakLineOn::NoWrap,
                         sections: vec![
@@ -176,6 +181,9 @@ fn create(mut commands: Commands, query: Query<(Entity, &TextInput), Added<TextI
                 style: Style {
                     overflow: Overflow::clip(),
                     justify_content: JustifyContent::FlexEnd,
+                    align_content: AlignContent::Center,
+                    align_self: AlignSelf::Center,
+                    flex_direction: FlexDirection::Row,
                     max_width: Val::Percent(100.),
                     ..default()
                 },
