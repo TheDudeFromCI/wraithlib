@@ -18,7 +18,7 @@ impl<Flags> WhElement for WhScreen<Flags>
 where
     Flags: Bundle,
 {
-    fn build(
+    fn build_child(
         self: Box<Self>,
         commands: &mut Commands,
         loader: &mut AssetLoader,
@@ -55,7 +55,7 @@ where
 
         let id = cmd.id();
         for child in self.children {
-            child.build(commands, loader, Some(id));
+            child.build_child(commands, loader, Some(id));
         }
     }
 }

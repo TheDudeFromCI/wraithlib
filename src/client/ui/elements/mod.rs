@@ -13,7 +13,7 @@ pub use screen::*;
 use crate::client::assets::AssetLoader;
 
 pub trait WhElement {
-    fn build(
+    fn build_child(
         self: Box<Self>,
         commands: &mut Commands,
         loader: &mut AssetLoader,

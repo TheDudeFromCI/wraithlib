@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::WhElement;
+use super::{BoxedElement, WhElement};
 use crate::client::assets::AssetLoader;
 
 #[derive(Default)]
@@ -16,7 +16,7 @@ impl<Flags> WhElement for WhCanvas<Flags>
 where
     Flags: Bundle,
 {
-    fn build(
+    fn build_child(
         self: Box<Self>,
         commands: &mut Commands,
         loader: &mut AssetLoader,
@@ -44,7 +44,7 @@ where
 
         let id = cmd.id();
         for child in self.children.into_iter() {
-            child.build(commands, loader, Some(id));
+            child.build_child(commands, loader, Some(id));
         }
     }
 }
@@ -56,5 +56,9 @@ where
     pub fn add_children(mut self, mut children: Vec<Box<dyn WhElement>>) -> Self {
         self.children.append(&mut children);
         self
+    }
+
+    pub fn build(self, commands: &mut Commands, loader: &mut AssetLoader) {
+        self.boxed().build_child(commands, loader, None);
     }
 }

@@ -18,7 +18,7 @@ impl<Flags> WhElement for WhButton<Flags>
 where
     Flags: Bundle,
 {
-    fn build(
+    fn build_child(
         self: Box<Self>,
         commands: &mut Commands,
         loader: &mut AssetLoader,

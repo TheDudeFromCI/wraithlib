@@ -60,6 +60,5 @@ fn init(
                 ])
                 .boxed(),
         ])
-        .boxed()
-        .build(&mut commands, &mut loader, None);
+        .build(&mut commands, &mut loader);
 }
