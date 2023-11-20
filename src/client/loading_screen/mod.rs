@@ -11,6 +11,8 @@ pub use conditions::*;
 pub use events::*;
 pub use resources::*;
 
+use super::assets::condition_is_done_loading;
+
 #[derive(Debug, Default)]
 pub struct LoadingScreenPlugin {
     pub properties: LoadingScreenProperties,
@@ -21,7 +23,6 @@ impl Plugin for LoadingScreenPlugin {
         app.add_state::<LoadingState>()
             .insert_resource(self.properties.clone())
             .init_resource::<ActiveLoadingScreen>()
-            .init_resource::<AssetsWaitForLoad>()
             .add_event::<TransitionToState>()
             .add_systems(Startup, systems::preload_loading_img)
             .add_systems(
@@ -33,7 +34,6 @@ impl Plugin for LoadingScreenPlugin {
                         .run_if(condition_is_done_loading),
                     systems::wait_for_fade_out.run_if(in_state(LoadingState::StartingLoad)),
                     systems::wait_for_fade_in.run_if(in_state(LoadingState::FinishingLoad)),
-                    systems::update_asset_queue,
                 ),
             )
             .add_systems(

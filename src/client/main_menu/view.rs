@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use super::*;
-use crate::client::loading_screen::AssetsWaitForLoad;
+use crate::client::assets::AssetsWaitForLoad;
 use crate::client::ui::{ScrollPane, TextInput};
 
 pub(super) fn build_ui(
