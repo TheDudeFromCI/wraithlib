@@ -10,8 +10,10 @@ pub use scroll_pane::*;
 pub use text_input::*;
 pub use tweening::*;
 
-pub struct UiPlugin;
-impl Plugin for UiPlugin {
+pub mod elements;
+
+pub struct WhUiPlugin;
+impl Plugin for WhUiPlugin {
     fn build(&self, app_: &mut App) {
         app_.add_plugins(TweeningPlugin)
             .add_plugins(TextInputPlugin)
