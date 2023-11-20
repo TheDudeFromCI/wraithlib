@@ -60,10 +60,6 @@ where
             child.build(commands, loader, Some(id));
         }
     }
-
-    fn children(&self) -> &[Box<dyn WhElement>] {
-        &self.children
-    }
 }
 
 impl<Flags> WhDiv<Flags>

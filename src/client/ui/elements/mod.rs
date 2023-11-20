@@ -19,10 +19,6 @@ pub trait WhElement {
         loader: &mut AssetLoader,
         parent: Option<Entity>,
     );
-
-    fn children(&self) -> &[Box<dyn WhElement>] {
-        &[]
-    }
 }
 
 #[derive(Debug, Default, Clone)]
