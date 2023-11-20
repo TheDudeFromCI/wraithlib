@@ -40,6 +40,7 @@ impl Plugin for MainMenuPlugin {
                     systems::back_button,
                     systems::add_server_button,
                     systems::back_to_multiplayer_button,
+                    systems::confirm_edit_server_button,
                     view::button_hover,
                     view::show_title_screen,
                     view::show_single_player_screen,

@@ -108,3 +108,18 @@ pub(super) fn back_to_multiplayer_button(
         }
     }
 }
+
+pub(super) fn confirm_edit_server_button(
+    interactions: Query<&Interaction, (Changed<Interaction>, With<ConfirmEditServerButton>)>,
+    mut next_state: ResMut<NextState<MainMenuState>>,
+    mut show_screen_evs: EventWriter<OpenMultiplayerScreenEvent>,
+    mut add_server_evs: EventWriter<AddServerEntry>,
+) {
+    for ev in interactions.iter() {
+        if let Interaction::Pressed = *ev {
+            next_state.set(MainMenuState::MultiplayerScreen);
+            show_screen_evs.send(OpenMultiplayerScreenEvent);
+            add_server_evs.send(AddServerEntry);
+        }
+    }
+}
