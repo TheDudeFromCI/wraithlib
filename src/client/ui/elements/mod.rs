@@ -1,10 +1,12 @@
 use bevy::prelude::*;
+use bevy::text::BreakLineOn;
 
 mod button;
 mod canvas;
 mod div;
 mod screen;
 mod scroll_pane;
+mod text;
 mod text_input;
 
 pub use button::*;
@@ -12,6 +14,7 @@ pub use canvas::*;
 pub use div::*;
 pub use screen::*;
 pub use scroll_pane::*;
+pub use text::*;
 pub use text_input::*;
 
 use crate::client::assets::AssetLoader;
@@ -66,6 +69,16 @@ impl NodeBackground {
     }
 }
 
+#[derive(Debug, Default, Clone)]
+pub enum NodeBorder {
+    #[default]
+    None,
+    Border {
+        thickness: Val,
+        color: Color,
+    },
+}
+
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ElementDirection {
     #[default]
@@ -79,6 +92,78 @@ pub enum ElementJustify {
     Center,
     Start,
     End,
+}
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum ElementAlignment {
+    #[default]
+    Center,
+    Start,
+    End,
+}
+
+#[derive(Debug, Clone)]
+pub struct NodeText {
+    pub font: Option<String>,
+    pub size: f32,
+    pub color: Color,
+    pub alignment: ElementAlignment,
+    pub justify: ElementJustify,
+    pub text: String,
+}
+
+impl Default for NodeText {
+    fn default() -> Self {
+        Self {
+            font: Default::default(),
+            size: 20.0,
+            color: Color::BLACK,
+            alignment: ElementAlignment::Center,
+            justify: ElementJustify::Start,
+            text: "Text".into(),
+        }
+    }
+}
+
+impl NodeText {
+    pub fn into_text_bundle(self, loader: &mut AssetLoader) -> TextBundle {
+        let alignment = match self.alignment {
+            ElementAlignment::Center => AlignContent::Center,
+            ElementAlignment::Start => AlignContent::FlexStart,
+            ElementAlignment::End => AlignContent::FlexEnd,
+        };
+
+        let justify = match self.justify {
+            ElementJustify::Center => TextAlignment::Center,
+            ElementJustify::Start => TextAlignment::Left,
+            ElementJustify::End => TextAlignment::Right,
+        };
+
+        let font = match self.font {
+            Some(path) => loader.load_string(path),
+            None => Default::default(),
+        };
+
+        TextBundle {
+            style: Style {
+                align_content: alignment,
+                ..default()
+            },
+            text: Text {
+                linebreak_behavior: BreakLineOn::WordBoundary,
+                alignment: justify,
+                sections: vec![TextSection {
+                    value: self.text,
+                    style: TextStyle {
+                        font,
+                        font_size: self.size,
+                        color: self.color,
+                    },
+                }],
+            },
+            ..default()
+        }
+    }
 }
 
 pub type BoxedElement = Box<dyn WhElement + Send + Sync>;

@@ -1,6 +1,13 @@
 use bevy::prelude::*;
 
-use super::{BoxedElement, ElementDirection, ElementJustify, NodeBackground, WhElement};
+use super::{
+    BoxedElement,
+    ElementDirection,
+    ElementJustify,
+    NodeBackground,
+    NodeBorder,
+    WhElement,
+};
 use crate::client::assets::AssetLoader;
 
 #[derive(Default)]
@@ -18,7 +25,10 @@ where
     pub padding: UiRect,
     pub margin: UiRect,
     pub flex_grow: f32,
+    pub flex_wrap: bool,
     pub children: Vec<BoxedElement>,
+    pub border: NodeBorder,
+    pub aspect_ratio: Option<f32>,
 }
 
 impl<Flags> WhElement for WhDiv<Flags>
@@ -44,11 +54,23 @@ where
             ElementJustify::End => JustifyContent::FlexEnd,
         };
 
+        let flex_wrap = if self.flex_wrap {
+            FlexWrap::Wrap
+        } else {
+            FlexWrap::NoWrap
+        };
+
+        let (border_color, border_thickness) = match self.border {
+            NodeBorder::None => (Color::NONE, Val::Px(0.0)),
+            NodeBorder::Border { color, thickness } => (color, thickness),
+        };
+
         let mut cmd = commands.spawn((
             self.flags,
             ImageBundle {
                 style: Style {
                     flex_direction,
+                    flex_wrap,
                     justify_content,
                     align_items: AlignItems::Center,
                     flex_grow: self.flex_grow,
@@ -58,9 +80,15 @@ where
                     height: self.height,
                     padding: self.padding,
                     margin: self.margin,
+                    aspect_ratio: self.aspect_ratio,
                     ..default()
                 },
                 ..background
+            },
+            Outline {
+                width: border_thickness,
+                color: border_color,
+                ..default()
             },
         ));
 
@@ -97,6 +125,17 @@ where
     pub fn size(mut self, width: Val, height: Val) -> Self {
         self.width = width;
         self.height = height;
+
+        if self.flex_grow > 0.0 {
+            if self.width == Val::Auto {
+                self.width = Val::Px(1.0);
+            }
+
+            if self.height == Val::Auto {
+                self.height = Val::Px(1.0);
+            }
+        }
+
         self
     }
 
@@ -123,6 +162,30 @@ where
 
     pub fn growing(mut self) -> Self {
         self.flex_grow = 1.0;
+
+        if self.width == Val::Auto {
+            self.width = Val::Px(1.0);
+        }
+
+        if self.height == Val::Auto {
+            self.height = Val::Px(1.0);
+        }
+
+        self
+    }
+
+    pub fn wrap_contents(mut self) -> Self {
+        self.flex_wrap = true;
+        self
+    }
+
+    pub fn border(mut self, thickness: Val, color: Color) -> Self {
+        self.border = NodeBorder::Border { thickness, color };
+        self
+    }
+
+    pub fn aspect_ratio(mut self, aspect_ratio: f32) -> Self {
+        self.aspect_ratio = Some(aspect_ratio);
         self
     }
 }

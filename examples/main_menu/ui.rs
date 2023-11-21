@@ -167,7 +167,57 @@ where
 
 fn server_entry() -> BoxedElement {
     WhDiv::<()>::default()
-        .background(NodeBackground::Color(Color::WHITE))
+        .background(NodeBackground::Color(Color::rgba(0.0, 0.0, 0.0, 0.5)))
+        .border(Val::Px(1.0), Color::rgb(0.8, 0.8, 0.8))
         .size(Val::Percent(100.0), Val::Px(100.0))
+        .padding(UiRect::all(Val::Px(10.0)))
+        .direction(ElementDirection::Row, Val::Px(10.0))
+        .add_children(vec![
+            WhDiv::<()>::default()
+                .background(NodeBackground::Image("images/wraithaven.png".into()))
+                .size(Val::Auto, Val::Percent(100.0))
+                .aspect_ratio(1.0)
+                .boxed(),
+            WhDiv::<()>::default()
+                .direction(ElementDirection::Column, Val::Px(2.0))
+                .size(Val::Px(1.0), Val::Percent(100.0))
+                .growing()
+                .add_children(vec![
+                    WhDiv::<()>::default()
+                        .direction(ElementDirection::Row, Val::Px(0.0))
+                        .justify(ElementJustify::Start)
+                        .size(Val::Percent(100.0), Val::Px(30.0))
+                        .add_children(vec![
+                            WhText::<()>::default()
+                                .text("Wraithaven")
+                                .font_size(26.0)
+                                .text_color(Color::WHITE)
+                                .size(Val::Auto, Val::Px(30.0))
+                                .growing()
+                                .boxed(),
+                            WhText::<()>::default()
+                                .text("200ms")
+                                .font_size(26.0)
+                                .text_color(Color::WHITE)
+                                .size(Val::Auto, Val::Px(30.0))
+                                .justify(ElementJustify::End)
+                                .boxed(),
+                        ])
+                        .boxed(),
+                    WhText::<()>::default()
+                        .text("wraithaven.com")
+                        .font_size(26.0)
+                        .text_color(Color::WHITE)
+                        .size(Val::Percent(100.0), Val::Px(30.0))
+                        .boxed(),
+                    WhText::<()>::default()
+                        .text("Wraithaven is a server for Wraithaven.")
+                        .font_size(26.0)
+                        .text_color(Color::WHITE)
+                        .size(Val::Percent(100.0), Val::Px(30.0))
+                        .boxed(),
+                ])
+                .boxed(),
+        ])
         .boxed()
 }
