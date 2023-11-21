@@ -2,6 +2,7 @@ use bevy::app::AppExit;
 use bevy::prelude::*;
 
 use super::*;
+use crate::common::uuid::Uuid;
 
 pub(super) fn init_main_menu(mut next_state: ResMut<NextState<MainMenuState>>) {
     next_state.set(MainMenuState::TitleScreen);
@@ -119,7 +120,11 @@ pub(super) fn confirm_edit_server_button(
         if let Interaction::Pressed = *ev {
             next_state.set(MainMenuState::MultiplayerScreen);
             show_screen_evs.send(OpenMultiplayerScreenEvent);
-            add_server_evs.send(AddServerEntry);
+            add_server_evs.send(AddServerEntry {
+                uuid: Uuid::from_random(),
+                name: "Unnamed Server".to_string(),
+                address: "127.0.0.1".to_string(),
+            });
         }
     }
 }

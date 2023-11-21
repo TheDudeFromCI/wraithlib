@@ -20,7 +20,10 @@ pub(super) fn build_ui(
 }
 
 pub(super) fn add_server_entry(
+    properties: Res<MainMenuProperties>,
     server_list: Query<Entity, With<ServerListPane>>,
+    asset_server: Res<AssetServer>,
+    mut asset_loader: ResMut<AssetsWaitForLoad>,
     mut add_server_evs: EventReader<AddServerEntry>,
     mut commands: Commands,
 ) {
@@ -28,27 +31,15 @@ pub(super) fn add_server_entry(
         return;
     };
 
-    for _ in add_server_evs.read() {
-        commands
-            .spawn((
-                ServerListEntry,
-                NodeBundle {
-                    style: Style {
-                        flex_direction: FlexDirection::Column,
-                        justify_content: JustifyContent::Center,
-                        align_items: AlignItems::Center,
-                        width: Val::Percent(100.0),
-                        height: Val::Px(100.0),
-                        border: UiRect::all(Val::Px(2.0)),
-                        margin: UiRect::bottom(Val::Px(5.0)),
-                        ..default()
-                    },
-                    background_color: Color::NONE.into(),
-                    border_color: Color::YELLOW.into(),
-                    ..default()
-                },
-            ))
-            .set_parent(server_list);
+    let mut loader = asset_loader.with_server(&asset_server);
+
+    for ev in add_server_evs.read() {
+        let Some(builder) = &properties.server_entry else {
+            continue;
+        };
+
+        let elem = builder(ev.uuid.clone(), &ev.name, &ev.address);
+        elem.build_child(&mut commands, &mut loader, Some(server_list));
     }
 }
 

@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::common::uuid::Uuid;
+
 #[derive(Debug, Event)]
 pub struct OpenTitleScreenEvent;
 
@@ -19,4 +21,8 @@ pub struct OpenCreditsScreenEvent;
 pub struct OpenEditServerScreenEvent;
 
 #[derive(Debug, Event)]
-pub struct AddServerEntry;
+pub struct AddServerEntry {
+    pub uuid: Uuid,
+    pub name: String,
+    pub address: String,
+}

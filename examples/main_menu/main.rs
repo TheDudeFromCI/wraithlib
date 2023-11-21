@@ -13,6 +13,7 @@ fn main() {
     App::new()
         .insert_resource(MainMenuProperties {
             canvas: ui::build_canvas(),
+            server_entry: Some(Box::new(ui::server_entry_builder)),
         })
         .add_plugins(
             DefaultPlugins

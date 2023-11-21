@@ -21,7 +21,7 @@ include-sqlite-sql = { version = "0.2.1", optional = true }
 
 [features]
 default = ["uuid", "files"]
-client = ["ui", "bevy/default"]
+client = ["ui", "bevy/default", "uuid"]
 server = ["bevy/multi-threaded", "networking"]
 dynamic = ["bevy/dynamic_linking"]
 uuid = ["dep:uuid"]

@@ -5,7 +5,7 @@ use uuid::Uuid as UuidLib;
 
 use super::EntityPointer;
 
-#[derive(Debug, Component, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Default, Component, Clone, PartialEq, Eq, Hash)]
 pub struct Uuid {
     id: UuidLib,
 }

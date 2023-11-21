@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use wraithlib::client::main_menu::*;
 use wraithlib::client::ui::elements::*;
+use wraithlib::common::uuid::Uuid;
 
 pub fn build_canvas() -> WhCanvas {
     WhCanvas::<()>::default().add_children(vec![
@@ -66,16 +67,6 @@ fn multiplayer_screen() -> BoxedElement {
                         .growing()
                         .outer_size(Val::Percent(100.0), Val::Auto)
                         .inner_size(Val::Percent(100.0), Val::Auto)
-                        .add_children(vec![
-                            //
-                            server_entry(),
-                            server_entry(),
-                            server_entry(),
-                            server_entry(),
-                            server_entry(),
-                            server_entry(),
-                            server_entry(),
-                        ])
                         .boxed(),
                     WhDiv::<()>::default()
                         .direction(ElementDirection::Row, Val::Px(10.0))
@@ -169,8 +160,9 @@ where
         .boxed()
 }
 
-fn server_entry() -> BoxedElement {
-    WhDiv::<()>::default()
+pub fn server_entry_builder(uuid: Uuid, name: &str, address: &str) -> BoxedElement {
+    WhDiv::<(Uuid, ServerListEntry)>::default()
+        .set_flags((uuid, ServerListEntry))
         .background(NodeBackground::Color(Color::rgba(0.0, 0.0, 0.0, 0.5)))
         .size(Val::Percent(100.0), Val::Px(100.0))
         .padding(UiRect::all(Val::Px(10.0)))
@@ -192,14 +184,14 @@ fn server_entry() -> BoxedElement {
                         .size(Val::Percent(100.0), Val::Px(30.0))
                         .add_children(vec![
                             WhText::<()>::default()
-                                .text("Wraithaven")
+                                .text(name)
                                 .font_size(26.0)
                                 .text_color(Color::WHITE)
                                 .size(Val::Auto, Val::Px(30.0))
                                 .growing()
                                 .boxed(),
                             WhText::<()>::default()
-                                .text("200ms")
+                                .text("0ms")
                                 .font_size(26.0)
                                 .text_color(Color::WHITE)
                                 .size(Val::Auto, Val::Px(30.0))
@@ -208,13 +200,13 @@ fn server_entry() -> BoxedElement {
                         ])
                         .boxed(),
                     WhText::<()>::default()
-                        .text("wraithaven.com")
+                        .text(address)
                         .font_size(26.0)
                         .text_color(Color::WHITE)
                         .size(Val::Percent(100.0), Val::Px(30.0))
                         .boxed(),
                     WhText::<()>::default()
-                        .text("Wraithaven is a server for Wraithaven.")
+                        .text("Server description.")
                         .font_size(26.0)
                         .text_color(Color::WHITE)
                         .size(Val::Percent(100.0), Val::Px(30.0))
