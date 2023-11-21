@@ -1,13 +1,6 @@
 use bevy::prelude::*;
 
-use super::{
-    BoxedElement,
-    ElementDirection,
-    ElementJustify,
-    NodeBackground,
-    NodeBorder,
-    WhElement,
-};
+use super::{BoxedElement, ElementDirection, ElementJustify, NodeBackground, WhElement};
 use crate::client::assets::AssetLoader;
 
 #[derive(Default)]
@@ -27,7 +20,6 @@ where
     pub flex_grow: f32,
     pub flex_wrap: bool,
     pub children: Vec<BoxedElement>,
-    pub border: NodeBorder,
     pub aspect_ratio: Option<f32>,
 }
 
@@ -60,11 +52,6 @@ where
             FlexWrap::NoWrap
         };
 
-        let (border_color, border_thickness) = match self.border {
-            NodeBorder::None => (Color::NONE, Val::Px(0.0)),
-            NodeBorder::Border { color, thickness } => (color, thickness),
-        };
-
         let mut cmd = commands.spawn((
             self.flags,
             ImageBundle {
@@ -84,11 +71,6 @@ where
                     ..default()
                 },
                 ..background
-            },
-            Outline {
-                width: border_thickness,
-                color: border_color,
-                ..default()
             },
         ));
 
@@ -176,11 +158,6 @@ where
 
     pub fn wrap_contents(mut self) -> Self {
         self.flex_wrap = true;
-        self
-    }
-
-    pub fn border(mut self, thickness: Val, color: Color) -> Self {
-        self.border = NodeBorder::Border { thickness, color };
         self
     }
 

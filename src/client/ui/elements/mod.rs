@@ -69,16 +69,6 @@ impl NodeBackground {
     }
 }
 
-#[derive(Debug, Default, Clone)]
-pub enum NodeBorder {
-    #[default]
-    None,
-    Border {
-        thickness: Val,
-        color: Color,
-    },
-}
-
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ElementDirection {
     #[default]

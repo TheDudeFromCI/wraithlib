@@ -64,10 +64,14 @@ fn multiplayer_screen() -> BoxedElement {
                         .direction(ElementDirection::Column, Val::Px(10.0))
                         .justify(ElementJustify::Start)
                         .growing()
-                        .outer_size(Val::Percent(100.0), Val::Px(1.0))
+                        .outer_size(Val::Percent(100.0), Val::Auto)
                         .inner_size(Val::Percent(100.0), Val::Auto)
                         .add_children(vec![
                             //
+                            server_entry(),
+                            server_entry(),
+                            server_entry(),
+                            server_entry(),
                             server_entry(),
                             server_entry(),
                             server_entry(),
@@ -168,7 +172,6 @@ where
 fn server_entry() -> BoxedElement {
     WhDiv::<()>::default()
         .background(NodeBackground::Color(Color::rgba(0.0, 0.0, 0.0, 0.5)))
-        .border(Val::Px(1.0), Color::rgb(0.8, 0.8, 0.8))
         .size(Val::Percent(100.0), Val::Px(100.0))
         .padding(UiRect::all(Val::Px(10.0)))
         .direction(ElementDirection::Row, Val::Px(10.0))
