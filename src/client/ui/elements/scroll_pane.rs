@@ -54,6 +54,8 @@ where
             self.outer_flags,
             ImageBundle {
                 style: Style {
+                    flex_direction: FlexDirection::Column,
+                    justify_content: JustifyContent::FlexStart,
                     align_items: AlignItems::Center,
                     flex_grow: self.flex_grow,
                     width: self.outer_width,
@@ -128,6 +130,17 @@ where
     pub fn outer_size(mut self, width: Val, height: Val) -> Self {
         self.outer_width = width;
         self.outer_height = height;
+
+        if self.flex_grow > 0.0 {
+            if self.outer_width == Val::Auto {
+                self.outer_width = Val::Px(1.0);
+            }
+
+            if self.outer_height == Val::Auto {
+                self.outer_height = Val::Px(1.0);
+            }
+        }
+
         self
     }
 
@@ -160,6 +173,15 @@ where
 
     pub fn growing(mut self) -> Self {
         self.flex_grow = 1.0;
+
+        if self.outer_width == Val::Auto {
+            self.outer_width = Val::Px(1.0);
+        }
+
+        if self.outer_height == Val::Auto {
+            self.outer_height = Val::Px(1.0);
+        }
+
         self
     }
 }
