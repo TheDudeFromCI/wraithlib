@@ -12,8 +12,8 @@ use wraithlib::common::WraithLibPlugins;
 fn main() {
     App::new()
         .insert_resource(MainMenuProperties {
-            canvas: ui::build_canvas(),
-            server_entry: Some(Box::new(ui::server_entry_builder)),
+            canvas: Some(ui::build_canvas()),
+            server_entry: Some(ui::server_entry_builder),
         })
         .add_plugins(
             DefaultPlugins

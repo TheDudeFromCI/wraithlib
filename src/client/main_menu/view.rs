@@ -1,29 +1,24 @@
 use bevy::prelude::*;
 
 use super::*;
-use crate::client::assets::AssetsWaitForLoad;
-use crate::client::ui::elements::WhCanvas;
-use crate::client::ui::TextInput;
 
 pub(super) fn build_ui(
     asset_server: Res<AssetServer>,
-    mut asset_loader: ResMut<AssetsWaitForLoad>,
     mut properties: ResMut<MainMenuProperties>,
     mut commands: Commands,
 ) {
-    let mut loader = asset_loader.with_server(&asset_server);
-
-    let mut canvas = WhCanvas::<()>::default();
+    let mut canvas = None;
     std::mem::swap(&mut canvas, &mut properties.canvas);
 
-    canvas.build(&mut commands, &mut loader);
+    if let Some(canvas) = canvas {
+        canvas.build(&mut commands, &asset_server);
+    }
 }
 
 pub(super) fn add_server_entry(
     properties: Res<MainMenuProperties>,
     server_list: Query<Entity, With<ServerListPane>>,
     asset_server: Res<AssetServer>,
-    mut asset_loader: ResMut<AssetsWaitForLoad>,
     mut add_server_evs: EventReader<AddServerEntry>,
     mut commands: Commands,
 ) {
@@ -31,15 +26,13 @@ pub(super) fn add_server_entry(
         return;
     };
 
-    let mut loader = asset_loader.with_server(&asset_server);
-
     for ev in add_server_evs.read() {
         let Some(builder) = &properties.server_entry else {
             continue;
         };
 
         let elem = builder(ev.uuid.clone(), &ev.name, &ev.address);
-        elem.build_child(&mut commands, &mut loader, Some(server_list));
+        elem.build_child(&mut commands, &asset_server, Some(server_list));
     }
 }
 
@@ -157,18 +150,6 @@ pub(super) fn show_edit_server_screen(
 
         for mut style in ui_to_open.iter_mut() {
             style.display = Display::Flex;
-        }
-    }
-}
-pub(super) fn text_focus_handler(
-    query: Query<(Entity, &Interaction), Changed<Interaction>>,
-    mut text_input_query: Query<(Entity, &mut TextInput)>,
-) {
-    for (interaction_entity, interaction) in &query {
-        if *interaction == Interaction::Pressed {
-            for (entity, mut text_input) in &mut text_input_query {
-                text_input.inactive = entity != interaction_entity;
-            }
         }
     }
 }

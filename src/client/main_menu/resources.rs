@@ -1,13 +1,13 @@
 use bevy::prelude::*;
+use bevy_wh_elements::element::BoxedElement;
 
-use crate::client::ui::elements::{BoxedElement, WhCanvas};
 use crate::common::uuid::Uuid;
 
-pub type ServerEntryBuilder = Box<dyn Fn(Uuid, &str, &str) -> BoxedElement + Send + Sync + 'static>;
+pub type ServerEntryBuilder = fn(Uuid, &str, &str) -> BoxedElement;
 
 #[derive(Default, Resource)]
 pub struct MainMenuProperties {
-    pub canvas: WhCanvas,
+    pub canvas: Option<BoxedElement>,
     pub server_entry: Option<ServerEntryBuilder>,
 }
 
