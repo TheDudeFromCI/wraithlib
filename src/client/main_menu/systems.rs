@@ -1,130 +1,47 @@
-use bevy::app::AppExit;
 use bevy::prelude::*;
 
 use super::*;
-use crate::common::uuid::Uuid;
 
 pub(super) fn init_main_menu(mut next_state: ResMut<NextState<MainMenuState>>) {
     next_state.set(MainMenuState::TitleScreen);
 }
 
-pub(super) fn single_player_button(
-    interactions: Query<&Interaction, (Changed<Interaction>, With<SinglePlayerButton>)>,
-    mut next_state: ResMut<NextState<MainMenuState>>,
-    mut show_screen_evs: EventWriter<OpenSinglePlayerScreenEvent>,
+pub(super) fn build_ui(
+    asset_server: Res<AssetServer>,
+    mut properties: ResMut<MainMenuProperties>,
+    mut commands: Commands,
 ) {
-    for ev in interactions.iter() {
-        if let Interaction::Pressed = *ev {
-            next_state.set(MainMenuState::SinglePlayerScreen);
-            show_screen_evs.send(OpenSinglePlayerScreenEvent);
-        }
+    let mut canvas = None;
+    std::mem::swap(&mut canvas, &mut properties.canvas);
+
+    if let Some(canvas) = canvas {
+        canvas.build(&mut commands, &asset_server);
     }
 }
 
-pub(super) fn multiplayer_button(
-    interactions: Query<&Interaction, (Changed<Interaction>, With<MultiplayerButton>)>,
-    mut next_state: ResMut<NextState<MainMenuState>>,
-    mut show_screen_evs: EventWriter<OpenMultiplayerScreenEvent>,
+pub(super) fn add_server_entry(
+    properties: Res<MainMenuProperties>,
+    server_list: Query<Entity, With<ServerListPane>>,
+    asset_server: Res<AssetServer>,
+    mut add_server_evs: EventReader<AddServerEntry>,
+    mut commands: Commands,
 ) {
-    for ev in interactions.iter() {
-        if let Interaction::Pressed = *ev {
-            next_state.set(MainMenuState::MultiplayerScreen);
-            show_screen_evs.send(OpenMultiplayerScreenEvent);
-        }
+    let Ok(server_list) = server_list.get_single() else {
+        return;
+    };
+
+    for ev in add_server_evs.read() {
+        let Some(builder) = &properties.server_entry else {
+            continue;
+        };
+
+        let elem = builder(ev.uuid.clone(), &ev.name, &ev.address);
+        elem.build_child(&mut commands, &asset_server, Some(server_list));
     }
 }
 
-pub(super) fn settings_button(
-    interactions: Query<&Interaction, (Changed<Interaction>, With<SettingsButton>)>,
-    mut next_state: ResMut<NextState<MainMenuState>>,
-    mut show_screen_evs: EventWriter<OpenSettingsScreenEvent>,
-) {
-    for ev in interactions.iter() {
-        if let Interaction::Pressed = *ev {
-            next_state.set(MainMenuState::SettingsScreen);
-            show_screen_evs.send(OpenSettingsScreenEvent);
-        }
-    }
-}
-
-pub(super) fn credits_button(
-    interactions: Query<&Interaction, (Changed<Interaction>, With<CreditsButton>)>,
-    mut next_state: ResMut<NextState<MainMenuState>>,
-    mut show_screen_evs: EventWriter<OpenCreditsScreenEvent>,
-) {
-    for ev in interactions.iter() {
-        if let Interaction::Pressed = *ev {
-            next_state.set(MainMenuState::CreditsScreen);
-            show_screen_evs.send(OpenCreditsScreenEvent);
-        }
-    }
-}
-
-pub(super) fn back_button(
-    interactions: Query<&Interaction, (Changed<Interaction>, With<BackToTitleScreenButton>)>,
-    mut next_state: ResMut<NextState<MainMenuState>>,
-    mut show_screen_evs: EventWriter<OpenTitleScreenEvent>,
-) {
-    for ev in interactions.iter() {
-        if let Interaction::Pressed = *ev {
-            next_state.set(MainMenuState::TitleScreen);
-            show_screen_evs.send(OpenTitleScreenEvent);
-        }
-    }
-}
-
-pub(super) fn quit_button(
-    interactions: Query<&Interaction, (Changed<Interaction>, With<QuitButton>)>,
-    mut exit_events: EventWriter<AppExit>,
-) {
-    for ev in interactions.iter() {
-        if let Interaction::Pressed = *ev {
-            exit_events.send(AppExit);
-        }
-    }
-}
-
-pub(super) fn add_server_button(
-    interactions: Query<&Interaction, (Changed<Interaction>, With<AddServerButton>)>,
-    mut next_state: ResMut<NextState<MainMenuState>>,
-    mut show_screen_evs: EventWriter<OpenEditServerScreenEvent>,
-) {
-    for ev in interactions.iter() {
-        if let Interaction::Pressed = *ev {
-            next_state.set(MainMenuState::EditServerScreen);
-            show_screen_evs.send(OpenEditServerScreenEvent);
-        }
-    }
-}
-
-pub(super) fn back_to_multiplayer_button(
-    interactions: Query<&Interaction, (Changed<Interaction>, With<BackToMultiplayerButton>)>,
-    mut next_state: ResMut<NextState<MainMenuState>>,
-    mut show_screen_evs: EventWriter<OpenMultiplayerScreenEvent>,
-) {
-    for ev in interactions.iter() {
-        if let Interaction::Pressed = *ev {
-            next_state.set(MainMenuState::MultiplayerScreen);
-            show_screen_evs.send(OpenMultiplayerScreenEvent);
-        }
-    }
-}
-
-pub(super) fn confirm_edit_server_button(
-    interactions: Query<&Interaction, (Changed<Interaction>, With<ConfirmEditServerButton>)>,
-    mut next_state: ResMut<NextState<MainMenuState>>,
-    mut show_screen_evs: EventWriter<OpenMultiplayerScreenEvent>,
-    mut add_server_evs: EventWriter<AddServerEntry>,
-) {
-    for ev in interactions.iter() {
-        if let Interaction::Pressed = *ev {
-            next_state.set(MainMenuState::MultiplayerScreen);
-            show_screen_evs.send(OpenMultiplayerScreenEvent);
-            add_server_evs.send(AddServerEntry {
-                uuid: Uuid::from_random(),
-                name: "Unnamed Server".to_string(),
-                address: "127.0.0.1".to_string(),
-            });
-        }
+pub(super) fn cleanup(ui: Query<Entity, With<MainMenuCanvas>>, mut commands: Commands) {
+    for entity in ui.iter() {
+        commands.entity(entity).despawn_recursive();
     }
 }
