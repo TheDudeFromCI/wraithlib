@@ -24,7 +24,8 @@ impl Plugin for MainMenuPlugin {
             .add_systems(OnExit(ClientGameState::MainMenu), systems::cleanup)
             .add_systems(
                 Update,
-                systems::add_server_entry.run_if(in_state(ClientGameState::MainMenu)),
+                (systems::add_server_entry, systems::confirm_edit_server)
+                    .run_if(in_state(ClientGameState::MainMenu)),
             );
     }
 }

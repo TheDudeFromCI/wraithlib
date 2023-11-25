@@ -146,11 +146,11 @@ pub fn build_canvas() -> BoxedElement {
                     WhDiv::new()
                         .direction(ElementDirection::Column, Val::Px(10.0))
                         .add_children(vec![
-                            WhTextInput::new()
+                            WhTextInput::with_flags((), ServerNameTextInput)
                                 .bg_color(Color::WHITE)
                                 .size(Val::Percent(100.0), Val::Px(40.0))
                                 .font_size(26.0),
-                            WhTextInput::new()
+                            WhTextInput::with_flags((), ServerAddressTextInput)
                                 .bg_color(Color::WHITE)
                                 .size(Val::Percent(100.0), Val::Px(40.0))
                                 .font_size(26.0),
@@ -158,18 +158,13 @@ pub fn build_canvas() -> BoxedElement {
                                 .direction(ElementDirection::Row, Val::Px(5.0))
                                 .padding(UiRect::all(Val::Px(5.0)))
                                 .add_children(vec![
-                                    WhButton::new()
+                                    WhButton::with_flags(ConfirmEditServerButton)
                                         .bg_img("images/menu/buttons/confirm.png")
                                         .size(Val::Px(200.0), Val::Px(50.0))
                                         .on_click(SetScreenInGroup::new(
                                             MAIN_MENU_GROUP,
                                             MULTIPLAYER_SCREEN,
-                                        ))
-                                        .on_click(AddServerEntry {
-                                            uuid: Uuid::from_random(),
-                                            name: "Unnamed Server".to_string(),
-                                            address: "127.0.0.1".to_string(),
-                                        }),
+                                        )),
                                     WhButton::new()
                                         .bg_img("images/menu/buttons/back.png")
                                         .size(Val::Px(200.0), Val::Px(50.0))
