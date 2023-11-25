@@ -11,6 +11,7 @@ const SETTINGS_SCREEN: ScreenID = ScreenID(4);
 const CREDITS_SCREEN: ScreenID = ScreenID(5);
 const EDIT_SERVER_SCREEN: ScreenID = ScreenID(6);
 const MAIN_MENU_GROUP: ScreenGroup = ScreenGroup(1);
+const SERVER_ENTRY_RADIO: RadioButtonGroup = RadioButtonGroup(1);
 
 pub fn build_canvas() -> BoxedElement {
     WhCanvas::with_flags(MainMenuCanvas) //
@@ -181,9 +182,12 @@ pub fn build_canvas() -> BoxedElement {
 pub fn server_entry_builder(uuid: Uuid, name: &str, address: &str) -> BoxedElement {
     WhDiv::with_flags((uuid, ServerListEntry))
         .bg_color(Color::rgba(0.0, 0.0, 0.0, 0.5))
-        .size(Val::Percent(100.0), Val::Px(100.0))
+        .size(Val::Percent(100.0), Val::Px(102.0))
         .padding(UiRect::all(Val::Px(5.0)))
         .direction(ElementDirection::Row, Val::Px(5.0))
+        .interaction(NodeInteraction::Radio(SERVER_ENTRY_RADIO))
+        .border(Color::DARK_GRAY, Val::Px(1.0))
+        .change_border_on_active(Color::WHITE, Val::Px(1.0))
         .add_children(vec![
             WhDiv::new()
                 .bg_img("images/wraithaven.png")
