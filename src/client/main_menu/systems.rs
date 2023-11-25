@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_wh_elements::components::TextInput;
+use bevy_wh_elements::components::{FocusableElement, TextInput};
 
 use super::*;
 use crate::common::uuid::Uuid;
@@ -63,6 +63,33 @@ pub(super) fn confirm_edit_server(
                 name: name.into(),
                 address: address.into(),
             });
+        }
+    }
+}
+
+pub(super) fn reset_edit_server_text_inputs(
+    button: Query<&Interaction, (Changed<Interaction>, With<ConfirmEditServerButton>)>,
+    mut server_name_text: Query<
+        &mut TextInput,
+        (With<ServerNameTextInput>, Without<ServerAddressTextInput>),
+    >,
+    mut server_address_text: Query<
+        &mut TextInput,
+        (With<ServerAddressTextInput>, Without<ServerNameTextInput>),
+    >,
+    mut focusable: Query<&mut FocusableElement>,
+) {
+    for interaction in button.iter() {
+        if let Interaction::Pressed = *interaction {
+            for mut text_input in server_name_text.iter_mut() {
+                text_input.clear();
+            }
+            for mut text_input in server_address_text.iter_mut() {
+                text_input.clear();
+            }
+            for mut focus in focusable.iter_mut() {
+                focus.focused = false;
+            }
         }
     }
 }
