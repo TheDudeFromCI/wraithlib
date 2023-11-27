@@ -25,31 +25,27 @@ pub fn build_canvas() -> BoxedElement {
                         .direction(ElementDirection::Column, Val::Px(10.0))
                         .size(Val::Px(250.0), Val::Auto)
                         .add_children(vec![
-                            WhButton::new()
-                                .bg_img("images/menu/buttons/singleplayer.png")
-                                .size(Val::Px(200.0), Val::Px(50.0))
+                            button("Single Player") //
                                 .on_click(SetScreenInGroup::new(
                                     MAIN_MENU_GROUP,
                                     SINGLE_PLAYER_SCREEN,
                                 )),
-                            WhButton::new()
-                                .bg_img("images/menu/buttons/multiplayer.png")
-                                .size(Val::Px(200.0), Val::Px(50.0))
+                            button("Multiplayer") //
                                 .on_click(SetScreenInGroup::new(
                                     MAIN_MENU_GROUP,
                                     MULTIPLAYER_SCREEN,
                                 )),
-                            WhButton::new()
-                                .bg_img("images/menu/buttons/settings.png")
-                                .size(Val::Px(200.0), Val::Px(50.0))
-                                .on_click(SetScreenInGroup::new(MAIN_MENU_GROUP, SETTINGS_SCREEN)),
-                            WhButton::new()
-                                .bg_img("images/menu/buttons/credits.png")
-                                .size(Val::Px(200.0), Val::Px(50.0))
-                                .on_click(SetScreenInGroup::new(MAIN_MENU_GROUP, CREDITS_SCREEN)),
-                            WhButton::new()
-                                .bg_img("images/menu/buttons/quit.png")
-                                .size(Val::Px(200.0), Val::Px(50.0))
+                            button("Settings") //
+                                .on_click(SetScreenInGroup::new(
+                                    MAIN_MENU_GROUP,
+                                    SETTINGS_SCREEN,
+                                )),
+                            button("Credits") //
+                                .on_click(SetScreenInGroup::new(
+                                    MAIN_MENU_GROUP,
+                                    CREDITS_SCREEN,
+                                )),
+                            button("Quit") //
                                 .on_click(AppExit),
                         ]),
                 ]),
@@ -61,16 +57,13 @@ pub fn build_canvas() -> BoxedElement {
                         .direction(ElementDirection::Column, Val::Px(10.0))
                         .size(Val::Px(250.0), Val::Auto)
                         .add_children(vec![
-                            WhButton::new()
-                                .bg_img("images/menu/buttons/new_game.png")
-                                .size(Val::Px(200.0), Val::Px(50.0)),
-                            WhButton::new()
-                                .bg_img("images/menu/buttons/load_game.png")
-                                .size(Val::Px(200.0), Val::Px(50.0)),
-                            WhButton::new()
-                                .bg_img("images/menu/buttons/back.png")
-                                .size(Val::Px(200.0), Val::Px(50.0))
-                                .on_click(SetScreenInGroup::new(MAIN_MENU_GROUP, TITLE_SCREEN)),
+                            button("New Game"),
+                            button("Load Game"),
+                            button("Back") //
+                                .on_click(SetScreenInGroup::new(
+                                    MAIN_MENU_GROUP,
+                                    TITLE_SCREEN,
+                                )),
                         ]),
                 ]),
             WhScreen::new(MULTIPLAYER_SCREEN)
@@ -95,16 +88,13 @@ pub fn build_canvas() -> BoxedElement {
                                 .justify(ElementAlignment::Right)
                                 .size(Val::Percent(100.0), Val::Px(80.0))
                                 .add_children(vec![
-                                    WhButton::new()
-                                        .bg_img("images/menu/buttons/add_server.png")
-                                        .size(Val::Px(200.0), Val::Px(50.0))
+                                    button("New") //
                                         .on_click(SetScreenInGroup::new(
                                             MAIN_MENU_GROUP,
                                             EDIT_SERVER_SCREEN,
                                         )),
-                                    WhButton::new()
-                                        .bg_img("images/menu/buttons/back.png")
-                                        .size(Val::Px(200.0), Val::Px(50.0))
+                                    button("Delete"),
+                                    button("Back") //
                                         .on_click(SetScreenInGroup::new(
                                             MAIN_MENU_GROUP,
                                             TITLE_SCREEN,
@@ -120,10 +110,11 @@ pub fn build_canvas() -> BoxedElement {
                         .direction(ElementDirection::Column, Val::Px(10.0))
                         .size(Val::Px(250.0), Val::Auto)
                         .add_children(vec![
-                            WhButton::new()
-                                .bg_img("images/menu/buttons/back.png")
-                                .size(Val::Px(200.0), Val::Px(50.0))
-                                .on_click(SetScreenInGroup::new(MAIN_MENU_GROUP, TITLE_SCREEN)),
+                            button("Back") //
+                                .on_click(SetScreenInGroup::new(
+                                    MAIN_MENU_GROUP,
+                                    TITLE_SCREEN,
+                                )),
                         ]),
                 ]),
             WhScreen::new(CREDITS_SCREEN)
@@ -134,10 +125,11 @@ pub fn build_canvas() -> BoxedElement {
                         .direction(ElementDirection::Column, Val::Px(10.0))
                         .size(Val::Px(250.0), Val::Auto)
                         .add_children(vec![
-                            WhButton::new()
-                                .bg_img("images/menu/buttons/back.png")
-                                .size(Val::Px(200.0), Val::Px(50.0))
-                                .on_click(SetScreenInGroup::new(MAIN_MENU_GROUP, TITLE_SCREEN)),
+                            button("Back") //
+                                .on_click(SetScreenInGroup::new(
+                                    MAIN_MENU_GROUP,
+                                    TITLE_SCREEN,
+                                )),
                         ]),
                 ]),
             WhScreen::new(EDIT_SERVER_SCREEN)
@@ -159,24 +151,37 @@ pub fn build_canvas() -> BoxedElement {
                                 .direction(ElementDirection::Row, Val::Px(5.0))
                                 .padding(UiRect::all(Val::Px(5.0)))
                                 .add_children(vec![
-                                    WhButton::with_flags(ConfirmEditServerButton)
-                                        .bg_img("images/menu/buttons/confirm.png")
+                                    button_flags(ConfirmEditServerButton, "Confirm")
+                                        .bg_img("images/menu/button.png")
                                         .size(Val::Px(200.0), Val::Px(50.0))
                                         .on_click(SetScreenInGroup::new(
                                             MAIN_MENU_GROUP,
                                             MULTIPLAYER_SCREEN,
                                         )),
-                                    WhButton::new()
-                                        .bg_img("images/menu/buttons/back.png")
-                                        .size(Val::Px(200.0), Val::Px(50.0))
-                                        .on_click(SetScreenInGroup::new(
-                                            MAIN_MENU_GROUP,
-                                            MULTIPLAYER_SCREEN,
-                                        )),
+                                    button("Back").on_click(SetScreenInGroup::new(
+                                        MAIN_MENU_GROUP,
+                                        MULTIPLAYER_SCREEN,
+                                    )),
                                 ]),
                         ]),
                 ]),
         ])
+}
+
+fn button_flags<B: Bundle>(flags: B, text: &str) -> Box<WhButton<B>> {
+    WhButton::with_flags(flags)
+        .bg_img("images/menu/button.png")
+        .size(Val::Px(200.0), Val::Px(50.0))
+        .add_child(
+            WhText::new()
+                .text(text)
+                .font_size(26.0)
+                .text_color(Color::BLACK),
+        )
+}
+
+fn button(text: &str) -> Box<WhButton<()>> {
+    button_flags((), text)
 }
 
 pub fn server_entry_builder(uuid: Uuid, name: &str, address: &str) -> BoxedElement {
