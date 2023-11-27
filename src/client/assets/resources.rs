@@ -25,6 +25,12 @@ impl AssetsWaitForLoad {
         self.assets.push(asset.clone().untyped().id());
     }
 
+    pub fn add_many_to_queue(&mut self, assets: &[UntypedHandle]) {
+        for asset in assets {
+            self.assets.push(asset.clone().id());
+        }
+    }
+
     pub fn is_empty(&self) -> bool {
         self.assets.is_empty()
     }

@@ -1,7 +1,9 @@
 use bevy::prelude::*;
+use bevy_wh_elements::assets::AssetReference;
 use bevy_wh_elements::components::{FocusableElement, TextInput};
 
 use super::*;
+use crate::client::assets::AssetsWaitForLoad;
 use crate::common::uuid::Uuid;
 
 pub(super) fn init_main_menu(mut next_state: ResMut<NextState<MainMenuState>>) {
@@ -10,6 +12,7 @@ pub(super) fn init_main_menu(mut next_state: ResMut<NextState<MainMenuState>>) {
 
 pub(super) fn build_ui(
     asset_server: Res<AssetServer>,
+    mut asset_queue: ResMut<AssetsWaitForLoad>,
     mut properties: ResMut<MainMenuProperties>,
     mut commands: Commands,
 ) {
@@ -17,7 +20,9 @@ pub(super) fn build_ui(
     std::mem::swap(&mut canvas, &mut properties.canvas);
 
     if let Some(canvas) = canvas {
-        canvas.build(&mut commands, &asset_server);
+        let mut loader = AssetReference::new(&asset_server);
+        canvas.build(&mut commands, &mut loader);
+        asset_queue.add_many_to_queue(loader.get_handles());
     }
 }
 
@@ -25,6 +30,7 @@ pub(super) fn add_server_entry(
     properties: Res<MainMenuProperties>,
     server_list: Query<Entity, With<ServerListPane>>,
     asset_server: Res<AssetServer>,
+    mut asset_queue: ResMut<AssetsWaitForLoad>,
     mut add_server_evs: EventReader<AddServerEntry>,
     mut commands: Commands,
 ) {
@@ -37,8 +43,10 @@ pub(super) fn add_server_entry(
             continue;
         };
 
+        let mut loader = AssetReference::new(&asset_server);
         let elem = builder(ev.uuid.clone(), &ev.name, &ev.address);
-        elem.build_child(&mut commands, &asset_server, Some(server_list));
+        elem.build_child(&mut commands, &mut loader, Some(server_list));
+        asset_queue.add_many_to_queue(loader.get_handles());
     }
 }
 
