@@ -28,6 +28,7 @@ impl Plugin for MainMenuPlugin {
                     systems::add_server_entry,
                     systems::confirm_edit_server,
                     systems::reset_edit_server_text_inputs,
+                    systems::join_server_button,
                 )
                     .run_if(in_state(ClientGameState::MainMenu)),
             );

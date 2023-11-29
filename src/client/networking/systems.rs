@@ -25,6 +25,7 @@ pub(super) fn connect_to_server(
             .map(|mut addrs| addrs.next());
 
         let Some(Some(addr)) = ip else {
+            warn!("Failed to resolve server address: {:?}", event.ip);
             events_failed_to_conn.send(CouldNotConnectToServerEvent);
             continue;
         };

@@ -1,9 +1,10 @@
 use bevy::prelude::*;
 use bevy_wh_elements::assets::AssetReference;
-use bevy_wh_elements::components::{FocusableElement, TextInput};
+use bevy_wh_elements::components::{FocusableElement, RadioButtonElement, TextInput};
 
 use super::*;
 use crate::client::assets::AssetsWaitForLoad;
+use crate::client::networking::TryConnectToServerEvent;
 use crate::common::uuid::Uuid;
 
 pub(super) fn init_main_menu(mut next_state: ResMut<NextState<MainMenuState>>) {
@@ -43,8 +44,14 @@ pub(super) fn add_server_entry(
             continue;
         };
 
+        let entry = ServerListEntry {
+            ip: ev.address.clone(),
+            name: ev.name.clone(),
+            ..default()
+        };
+
         let mut loader = AssetReference::new(&asset_server);
-        let elem = builder(ev.uuid.clone(), &ev.name, &ev.address);
+        let elem = builder(ev.uuid.clone(), entry);
         elem.build_child(&mut commands, &mut loader, Some(server_list));
         asset_queue.add_many_to_queue(loader.get_handles());
     }
@@ -97,6 +104,24 @@ pub(super) fn reset_edit_server_text_inputs(
             }
             for mut focus in focusable.iter_mut() {
                 focus.focused = false;
+            }
+        }
+    }
+}
+
+pub(super) fn join_server_button(
+    query_button: Query<&Interaction, (Changed<Interaction>, With<JoinServerButton>)>,
+    query_servers: Query<(&ServerListEntry, &RadioButtonElement)>,
+    mut try_join_server_evs: EventWriter<TryConnectToServerEvent>,
+) {
+    for interaction in query_button.iter() {
+        if let Interaction::Pressed = *interaction {
+            for (server, radio) in query_servers.iter() {
+                if radio.selected {
+                    try_join_server_evs.send(TryConnectToServerEvent {
+                        ip: server.ip.clone(),
+                    });
+                }
             }
         }
     }

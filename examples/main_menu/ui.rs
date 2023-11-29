@@ -94,6 +94,7 @@ pub fn build_canvas() -> BoxedElement {
                                             EDIT_SERVER_SCREEN,
                                         )),
                                     button("Delete"),
+                                    button_flags(JoinServerButton, "Join"),
                                     button("Back") //
                                         .on_click(SetScreenInGroup::new(
                                             MAIN_MENU_GROUP,
@@ -184,8 +185,8 @@ fn button(text: &str) -> Box<WhButton<()>> {
     button_flags((), text)
 }
 
-pub fn server_entry_builder(uuid: Uuid, name: &str, address: &str) -> BoxedElement {
-    WhDiv::with_flags((uuid, ServerListEntry))
+pub fn server_entry_builder(uuid: Uuid, entry: ServerListEntry) -> BoxedElement {
+    WhDiv::with_flags((uuid, entry.clone()))
         .bg_color(Color::rgba(0.0, 0.0, 0.0, 0.5))
         .size(Val::Percent(100.0), Val::Px(102.0))
         .padding(UiRect::all(Val::Px(5.0)))
@@ -209,7 +210,7 @@ pub fn server_entry_builder(uuid: Uuid, name: &str, address: &str) -> BoxedEleme
                         .size(Val::Percent(100.0), Val::Px(30.0))
                         .add_children(vec![
                             WhText::new()
-                                .text(name)
+                                .text(&entry.name)
                                 .font_size(26.0)
                                 .text_color(Color::WHITE)
                                 .justify(ElementAlignment::Left)
@@ -221,7 +222,7 @@ pub fn server_entry_builder(uuid: Uuid, name: &str, address: &str) -> BoxedEleme
                                 .justify(ElementAlignment::Right),
                         ]),
                     WhText::new()
-                        .text(address)
+                        .text(&entry.ip)
                         .font_size(26.0)
                         .text_color(Color::WHITE)
                         .size(Val::Percent(100.0), Val::Px(30.0))
