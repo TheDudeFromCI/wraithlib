@@ -5,7 +5,10 @@ use bevy_wh_elements::components::{FocusableElement, RadioButtonElement, TextInp
 use super::*;
 use crate::client::assets::AssetsWaitForLoad;
 use crate::client::networking::TryConnectToServerEvent;
+use crate::common::files::*;
 use crate::common::uuid::Uuid;
+
+include_sql!("src/client/main_menu/server_list.sql");
 
 pub(super) fn init_main_menu(mut next_state: ResMut<NextState<MainMenuState>>) {
     next_state.set(MainMenuState::TitleScreen);
@@ -77,6 +80,7 @@ pub(super) fn confirm_edit_server(
                 uuid: Uuid::from_random(),
                 name: name.into(),
                 address: address.into(),
+                update_database: true,
             });
         }
     }
@@ -125,4 +129,53 @@ pub(super) fn join_server_button(
             }
         }
     }
+}
+
+pub(super) fn save_new_server_entry(
+    files: Res<Files>,
+    mut on_add_server_entry: EventReader<AddServerEntry>,
+) {
+    for ev in on_add_server_entry.read() {
+        if !ev.update_database {
+            continue;
+        }
+
+        let save = files.get_save_at("server_list.db").open();
+
+        save.init_server_list().unwrap();
+        save.add_server_entry(&ev.name, &ev.address).unwrap();
+
+        let rowid = save.last_insert_rowid();
+        save.write_uuid("server_list", "uuid", rowid, &ev.uuid)
+            .unwrap();
+
+        info!("Added server entry: {} ({})", ev.name, ev.address);
+    }
+}
+
+pub(super) fn load_server_entries(
+    files: Res<Files>,
+    mut do_add_server_entry: EventWriter<AddServerEntry>,
+) {
+    let save = files.get_save_at("server_list.db").open();
+
+    save.init_server_list().unwrap();
+    save.get_server_entries(|row| {
+        let rowid = row.get_ref(0)?.as_i64()?;
+        let uuid = save.read_uuid("server_list", "uuid", rowid)?;
+        let name = row.get_ref(1)?.as_str()?.to_owned();
+        let address = row.get_ref(2)?.as_str()?.to_owned();
+
+        info!("Loaded server entry: {} ({})", name, address);
+
+        do_add_server_entry.send(AddServerEntry {
+            uuid,
+            name,
+            address,
+            update_database: false,
+        });
+
+        Ok(())
+    })
+    .unwrap();
 }

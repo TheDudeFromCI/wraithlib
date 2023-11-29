@@ -56,6 +56,12 @@ impl Files {
         let file = folder.join(name);
         SaveFile::from_path(file)
     }
+
+    pub fn get_save_at(&self, name: &str) -> SaveFile {
+        let folder = self.get_data_folder();
+        let file = folder.join(name);
+        SaveFile::from_path(file)
+    }
 }
 
 pub struct SaveFile {

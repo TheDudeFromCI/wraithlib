@@ -19,7 +19,11 @@ impl Plugin for MainMenuPlugin {
             .add_event::<AddServerEntry>()
             .add_systems(
                 OnEnter(ClientGameState::MainMenu),
-                (systems::init_main_menu, systems::build_ui),
+                (
+                    systems::init_main_menu,
+                    systems::build_ui,
+                    systems::load_server_entries,
+                ),
             )
             .add_systems(OnExit(ClientGameState::MainMenu), systems::cleanup)
             .add_systems(
@@ -29,6 +33,7 @@ impl Plugin for MainMenuPlugin {
                     systems::confirm_edit_server,
                     systems::reset_edit_server_text_inputs,
                     systems::join_server_button,
+                    systems::save_new_server_entry,
                 )
                     .run_if(in_state(ClientGameState::MainMenu)),
             );

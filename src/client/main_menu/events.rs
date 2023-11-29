@@ -7,4 +7,5 @@ pub struct AddServerEntry {
     pub uuid: Uuid,
     pub name: String,
     pub address: String,
+    pub update_database: bool,
 }

@@ -26,8 +26,18 @@ impl Uuid {
         }
     }
 
+    pub fn from_bytes(bytes: [u8; 16]) -> Self {
+        Self {
+            id: UuidLib::from_bytes(bytes),
+        }
+    }
+
     pub fn get_pointer(&self) -> EntityPointer {
         EntityPointer::Uuid(self.clone())
+    }
+
+    pub fn as_bytes(&self) -> &[u8; 16] {
+        self.id.as_bytes()
     }
 }
 

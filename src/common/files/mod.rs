@@ -1,8 +1,10 @@
 use bevy::prelude::*;
 
+mod blobs;
 mod file_system;
 mod systems;
 
+pub use blobs::*;
 pub use file_system::*;
 pub use include_sqlite_sql::*;
 pub use rusqlite::Connection;
