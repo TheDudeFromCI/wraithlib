@@ -4,25 +4,25 @@ use bevy_renet::renet::ClientId;
 use crate::common::networking::PacketContainer;
 
 #[derive(Debug, Event)]
-pub struct ClientConnectedEvent {
+pub struct OnClientConnected {
     pub client_id: ClientId,
     pub entity: Entity,
 }
 
 #[derive(Debug, Event)]
-pub struct ClientDisconnectedEvent {
+pub struct OnClientDisconnected {
     pub client_id: ClientId,
     pub entity: Entity,
 }
 
 #[derive(Debug, Event)]
-pub struct SendPacket {
+pub struct DoSendPacket {
     pub packet: PacketContainer,
     pub client_id: ClientId,
 }
 
 #[derive(Debug, Event)]
-pub struct ReceivePacket {
+pub struct OnReceivePacket {
     pub packet: PacketContainer,
     pub client_id: ClientId,
 }

@@ -47,7 +47,7 @@ impl PacketContainer {
 macro_rules! impl_packet {
     (to_client $t:ty) => {
         #[typetag::serde]
-        impl $crate::network::packets::Packet for $t {
+        impl $crate::common::networking::Packet for $t {
             fn can_send_to_client(&self) -> bool {
                 true
             }
@@ -64,7 +64,7 @@ macro_rules! impl_packet {
 
     (to_server $t:ty) => {
         #[typetag::serde]
-        impl $crate::network::packets::Packet for $t {
+        impl $crate::common::networking::Packet for $t {
             fn can_send_to_client(&self) -> bool {
                 false
             }
@@ -81,7 +81,7 @@ macro_rules! impl_packet {
 
     (to_both $t:ty) => {
         #[typetag::serde]
-        impl $crate::network::packets::Packet for $t {
+        impl $crate::common::networking::Packet for $t {
             fn can_send_to_client(&self) -> bool {
                 true
             }

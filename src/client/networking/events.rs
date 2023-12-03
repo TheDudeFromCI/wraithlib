@@ -3,21 +3,21 @@ use bevy::prelude::*;
 use crate::common::networking::PacketContainer;
 
 #[derive(Debug, Event)]
-pub struct TryConnectToServerEvent {
+pub struct DoConnectToServer {
     pub ip: String,
 }
 
 #[derive(Debug, Event)]
-pub struct JoinedServerEvent;
+pub struct OnJoinedServer;
 
 #[derive(Debug, Event)]
-pub struct DisconnectedFromServerEvent;
+pub struct OnDisconnectedFromServer;
 
 #[derive(Debug, Event)]
-pub struct CouldNotConnectToServerEvent;
+pub struct OnCouldNotConnectToServer;
 
 #[derive(Debug, Event, Deref)]
-pub struct SendPacket(pub PacketContainer);
+pub struct DoSendPacket(pub PacketContainer);
 
 #[derive(Debug, Event, Deref)]
-pub struct ReceivePacket(pub PacketContainer);
+pub struct OnReceivePacket(pub PacketContainer);

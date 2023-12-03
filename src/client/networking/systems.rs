@@ -12,8 +12,8 @@ use crate::client::gamestates::ClientGameState;
 use crate::common::networking::{PacketContainer, PROTOCOL_ID};
 
 pub(super) fn connect_to_server(
-    mut events_conn_to_server: EventReader<TryConnectToServerEvent>,
-    mut events_failed_to_conn: EventWriter<CouldNotConnectToServerEvent>,
+    mut events_conn_to_server: EventReader<DoConnectToServer>,
+    mut events_failed_to_conn: EventWriter<OnCouldNotConnectToServer>,
     mut next_state: ResMut<NextState<NetworkState>>,
     mut commands: Commands,
 ) {
@@ -26,7 +26,7 @@ pub(super) fn connect_to_server(
 
         let Some(Some(addr)) = ip else {
             warn!("Failed to resolve server address: {:?}", event.ip);
-            events_failed_to_conn.send(CouldNotConnectToServerEvent);
+            events_failed_to_conn.send(OnCouldNotConnectToServer);
             continue;
         };
 
@@ -55,14 +55,14 @@ pub(super) fn connect_to_server(
 
 pub(super) fn wait_for_connection(
     client: Res<RenetClient>,
-    mut events: EventWriter<JoinedServerEvent>,
+    mut events: EventWriter<OnJoinedServer>,
     mut next_state: ResMut<NextState<NetworkState>>,
     mut game_state: ResMut<NextState<ClientGameState>>,
 ) {
     if client.is_connected() {
         next_state.set(NetworkState::Connected);
         game_state.set(ClientGameState::BuildingWorld);
-        events.send(JoinedServerEvent);
+        events.send(OnJoinedServer);
         debug!("Client joined server.");
     }
 }
@@ -70,17 +70,17 @@ pub(super) fn wait_for_connection(
 pub(super) fn handle_broken_connection(
     current_state: Res<State<NetworkState>>,
     client: Res<RenetClient>,
-    mut failed_con_events: EventWriter<CouldNotConnectToServerEvent>,
-    mut disconnected_events: EventWriter<DisconnectedFromServerEvent>,
+    mut failed_con_events: EventWriter<OnCouldNotConnectToServer>,
+    mut disconnected_events: EventWriter<OnDisconnectedFromServer>,
     mut next_state: ResMut<NextState<NetworkState>>,
     mut game_state: ResMut<NextState<ClientGameState>>,
 ) {
     if client.is_disconnected() {
         if *current_state == NetworkState::Connecting {
-            failed_con_events.send(CouldNotConnectToServerEvent);
+            failed_con_events.send(OnCouldNotConnectToServer);
             debug!("Client failed to connect to server.");
         } else {
-            disconnected_events.send(DisconnectedFromServerEvent);
+            disconnected_events.send(OnDisconnectedFromServer);
             game_state.set(ClientGameState::ClosingWorld);
             debug!("Client disconnected from server.");
         }
@@ -89,7 +89,7 @@ pub(super) fn handle_broken_connection(
     }
 }
 
-pub(super) fn send_packet(mut client: ResMut<RenetClient>, mut events: EventReader<SendPacket>) {
+pub(super) fn send_packet(mut client: ResMut<RenetClient>, mut events: EventReader<DoSendPacket>) {
     for ev in events.read() {
         let Some(message) = ev.serialize() else {
             warn!("Failed to serialize packet!");
@@ -101,7 +101,7 @@ pub(super) fn send_packet(mut client: ResMut<RenetClient>, mut events: EventRead
 
 pub(super) fn receive_packets(
     mut client: ResMut<RenetClient>,
-    mut events: EventWriter<ReceivePacket>,
+    mut events: EventWriter<OnReceivePacket>,
 ) {
     while let Some(message) = client.receive_message(DefaultChannel::ReliableOrdered) {
         let Some(packet) = PacketContainer::deserialize(&message) else {
@@ -109,7 +109,7 @@ pub(super) fn receive_packets(
             continue;
         };
 
-        events.send(ReceivePacket(packet));
+        events.send(OnReceivePacket(packet));
     }
 }
 

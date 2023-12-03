@@ -38,10 +38,10 @@ impl Plugin for ServerNetworkingPlugin {
 
         app_.insert_resource(server)
             .insert_resource(transport)
-            .add_event::<ClientConnectedEvent>()
-            .add_event::<ClientDisconnectedEvent>()
-            .add_event::<SendPacket>()
-            .add_event::<ReceivePacket>()
+            .add_event::<OnClientConnected>()
+            .add_event::<OnClientDisconnected>()
+            .add_event::<DoSendPacket>()
+            .add_event::<OnReceivePacket>()
             .add_plugins((RenetServerPlugin, NetcodeServerPlugin))
             .add_systems(
                 Update,

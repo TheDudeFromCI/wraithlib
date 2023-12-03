@@ -4,19 +4,19 @@ use bevy_renet::renet::transport::{NetcodeServerTransport, NetcodeTransportError
 use bevy_renet::renet::{DefaultChannel, RenetServer, ServerEvent};
 
 use super::{
-    ClientConnectedEvent,
     ClientConnection,
-    ClientDisconnectedEvent,
-    ReceivePacket,
-    SendPacket,
+    DoSendPacket,
+    OnClientConnected,
+    OnClientDisconnected,
+    OnReceivePacket,
 };
 use crate::common::networking::PacketContainer;
 
 pub(super) fn server_event_handler(
     mut clients: Query<(Entity, &mut ClientConnection)>,
     mut server_events: EventReader<ServerEvent>,
-    mut connected_events: EventWriter<ClientConnectedEvent>,
-    mut disconnected_events: EventWriter<ClientDisconnectedEvent>,
+    mut connected_events: EventWriter<OnClientConnected>,
+    mut disconnected_events: EventWriter<OnClientDisconnected>,
     mut commands: Commands,
 ) {
     for event in server_events.read() {
@@ -24,7 +24,7 @@ pub(super) fn server_event_handler(
             ServerEvent::ClientConnected { client_id } => {
                 let id = commands.spawn((ClientConnection::new(*client_id),)).id();
 
-                connected_events.send(ClientConnectedEvent {
+                connected_events.send(OnClientConnected {
                     client_id: *client_id,
                     entity: id,
                 });
@@ -40,7 +40,7 @@ pub(super) fn server_event_handler(
                     .unwrap();
 
                 clients.get_mut(id).unwrap().1.disconnect();
-                disconnected_events.send(ClientDisconnectedEvent {
+                disconnected_events.send(OnClientDisconnected {
                     client_id: *client_id,
                     entity: id,
                 });
@@ -49,7 +49,7 @@ pub(super) fn server_event_handler(
     }
 }
 
-pub(super) fn send_packet(mut server: ResMut<RenetServer>, mut events: EventReader<SendPacket>) {
+pub(super) fn send_packet(mut server: ResMut<RenetServer>, mut events: EventReader<DoSendPacket>) {
     for ev in events.read() {
         if !server.is_connected(ev.client_id) {
             continue;
@@ -66,7 +66,7 @@ pub(super) fn send_packet(mut server: ResMut<RenetServer>, mut events: EventRead
 
 pub(super) fn receive_packets(
     mut server: ResMut<RenetServer>,
-    mut events: EventWriter<ReceivePacket>,
+    mut events: EventWriter<OnReceivePacket>,
 ) {
     for client_id in server.clients_id().into_iter() {
         while let Some(message) = server.receive_message(client_id, DefaultChannel::ReliableOrdered)
@@ -76,7 +76,7 @@ pub(super) fn receive_packets(
                 continue;
             };
 
-            events.send(ReceivePacket { packet, client_id });
+            events.send(OnReceivePacket { packet, client_id });
         }
     }
 }
