@@ -4,7 +4,7 @@ use bevy_wh_elements::components::{FocusableElement, RadioButtonElement, TextInp
 
 use super::*;
 use crate::client::assets::AssetsWaitForLoad;
-use crate::client::networking::TryConnectToServerEvent;
+use crate::client::networking::DoConnectToServer;
 use crate::common::files::*;
 use crate::common::uuid::Uuid;
 
@@ -12,22 +12,25 @@ include_sql!("src/client/main_menu/server_list.sql");
 
 pub(super) fn init_main_menu(mut next_state: ResMut<NextState<MainMenuState>>) {
     next_state.set(MainMenuState::TitleScreen);
+    info!("Initialized main menu");
 }
 
 pub(super) fn build_ui(
     asset_server: Res<AssetServer>,
+    properties: Res<MainMenuProperties>,
     mut asset_queue: ResMut<AssetsWaitForLoad>,
-    mut properties: ResMut<MainMenuProperties>,
     mut commands: Commands,
 ) {
-    let mut canvas = None;
-    std::mem::swap(&mut canvas, &mut properties.canvas);
+    let Some(builder) = properties.canvas_builder else {
+        return;
+    };
 
-    if let Some(canvas) = canvas {
-        let mut loader = AssetReference::new(&asset_server);
-        canvas.build(&mut commands, &mut loader);
-        asset_queue.add_many_to_queue(loader.get_handles());
-    }
+    let mut loader = AssetReference::new(&asset_server);
+    let elem = builder();
+    elem.build(&mut commands, &mut loader);
+    asset_queue.add_many_to_queue(loader.get_handles());
+
+    debug!("Built main menu UI");
 }
 
 pub(super) fn add_server_entry(
@@ -43,7 +46,7 @@ pub(super) fn add_server_entry(
     };
 
     for ev in add_server_evs.read() {
-        let Some(builder) = &properties.server_entry else {
+        let Some(builder) = &properties.server_entry_builder else {
             continue;
         };
 
@@ -57,6 +60,8 @@ pub(super) fn add_server_entry(
         let elem = builder(ev.uuid.clone(), entry);
         elem.build_child(&mut commands, &mut loader, Some(server_list));
         asset_queue.add_many_to_queue(loader.get_handles());
+
+        debug!("Added server entry: {} ({})", ev.name, ev.address);
     }
 }
 
@@ -116,13 +121,13 @@ pub(super) fn reset_edit_server_text_inputs(
 pub(super) fn join_server_button(
     query_button: Query<&Interaction, (Changed<Interaction>, With<JoinServerButton>)>,
     query_servers: Query<(&ServerListEntry, &RadioButtonElement)>,
-    mut try_join_server_evs: EventWriter<TryConnectToServerEvent>,
+    mut try_join_server_evs: EventWriter<DoConnectToServer>,
 ) {
     for interaction in query_button.iter() {
         if let Interaction::Pressed = *interaction {
             for (server, radio) in query_servers.iter() {
                 if radio.selected {
-                    try_join_server_evs.send(TryConnectToServerEvent {
+                    try_join_server_evs.send(DoConnectToServer {
                         ip: server.ip.clone(),
                     });
                 }

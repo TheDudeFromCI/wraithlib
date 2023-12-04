@@ -28,6 +28,8 @@ pub(super) fn server_event_handler(
                     client_id: *client_id,
                     entity: id,
                 });
+
+                info!("Client {} connected.", client_id);
             }
             ServerEvent::ClientDisconnected {
                 client_id,
@@ -44,6 +46,8 @@ pub(super) fn server_event_handler(
                     client_id: *client_id,
                     entity: id,
                 });
+
+                info!("Client {} disconnected.", client_id);
             }
         };
     }

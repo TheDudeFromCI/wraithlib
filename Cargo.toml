@@ -13,6 +13,7 @@ bevy_wh_elements = { git = "https://github.com/TheDudeFromCI/bevy_wh_elements", 
 bevy_renet = { version = "0.0.10", optional = true }
 bincode = { version = "1.3.3", optional = true }
 typetag = { version = "0.2.13", optional = true }
+serde = { version = "1.0.193", optional = true }
 
 lazy_static = "1.4.0"
 uuid = { version = "1.5.0", features = ["v4"], optional = true }

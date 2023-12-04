@@ -23,6 +23,7 @@ impl Plugin for LoadingScreenPlugin {
         app.add_state::<LoadingState>()
             .insert_resource(self.properties.clone())
             .init_resource::<ActiveLoadingScreen>()
+            .init_resource::<ActiveLoadingSystems>()
             .add_event::<TransitionToState>()
             .add_systems(Startup, systems::preload_loading_img)
             .add_systems(

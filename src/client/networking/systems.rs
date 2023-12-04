@@ -8,7 +8,6 @@ use bevy_renet::renet::{ConnectionConfig, DefaultChannel, RenetClient};
 
 use super::events::*;
 use super::resources::*;
-use crate::client::gamestates::ClientGameState;
 use crate::common::networking::{PacketContainer, PROTOCOL_ID};
 
 pub(super) fn connect_to_server(
@@ -49,7 +48,7 @@ pub(super) fn connect_to_server(
         commands.insert_resource(transport);
 
         next_state.set(NetworkState::Connecting);
-        debug!("Client connecting to server at {}.", addr);
+        info!("Client connecting to server at {}.", addr);
     }
 }
 
@@ -57,13 +56,11 @@ pub(super) fn wait_for_connection(
     client: Res<RenetClient>,
     mut events: EventWriter<OnJoinedServer>,
     mut next_state: ResMut<NextState<NetworkState>>,
-    mut game_state: ResMut<NextState<ClientGameState>>,
 ) {
     if client.is_connected() {
         next_state.set(NetworkState::Connected);
-        game_state.set(ClientGameState::BuildingWorld);
         events.send(OnJoinedServer);
-        debug!("Client joined server.");
+        info!("Client joined server.");
     }
 }
 
@@ -73,16 +70,14 @@ pub(super) fn handle_broken_connection(
     mut failed_con_events: EventWriter<OnCouldNotConnectToServer>,
     mut disconnected_events: EventWriter<OnDisconnectedFromServer>,
     mut next_state: ResMut<NextState<NetworkState>>,
-    mut game_state: ResMut<NextState<ClientGameState>>,
 ) {
     if client.is_disconnected() {
         if *current_state == NetworkState::Connecting {
             failed_con_events.send(OnCouldNotConnectToServer);
-            debug!("Client failed to connect to server.");
+            warn!("Client failed to connect to server.");
         } else {
             disconnected_events.send(OnDisconnectedFromServer);
-            game_state.set(ClientGameState::ClosingWorld);
-            debug!("Client disconnected from server.");
+            info!("Client disconnected from server.");
         }
 
         next_state.set(NetworkState::NotConnected);
@@ -126,4 +121,20 @@ pub(super) fn close_connection_on_exit(
     client.disconnect();
     transport.disconnect();
     next_state.set(NetworkState::NotConnected);
+}
+
+pub(super) fn disconnect_from_server(
+    mut events: EventReader<DoDisconnectFromServer>,
+    mut disconnected_events: EventWriter<OnDisconnectedFromServer>,
+    mut client: ResMut<RenetClient>,
+    mut transport: ResMut<NetcodeClientTransport>,
+    mut next_state: ResMut<NextState<NetworkState>>,
+) {
+    for _ in events.read().take(1) {
+        client.disconnect();
+        transport.disconnect();
+        next_state.set(NetworkState::NotConnected);
+        disconnected_events.send(OnDisconnectedFromServer);
+        info!("Client disconnected from server.")
+    }
 }
