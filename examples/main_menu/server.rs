@@ -2,9 +2,9 @@ use std::thread;
 
 use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
+use bevy_wh_net::server::{ClientConnection, DoSendPacketToClient, ServerNetworkingPlugin};
 use wraithlib::common::WraithLibPlugins;
 use wraithlib::server::gamestates::ServerGameState;
-use wraithlib::server::networking::{ClientConnection, DoSendPacket, ServerNetworkingPlugin};
 use wraithlib::server::ServerPlugins;
 
 use crate::game::RotatePacket;
@@ -35,7 +35,7 @@ pub fn run() {
 pub fn update(
     time: Res<Time>,
     query_clients: Query<&ClientConnection>,
-    mut do_send_packet_evs: EventWriter<DoSendPacket>,
+    mut do_send_packet_evs: EventWriter<DoSendPacketToClient>,
 ) {
     let s = time.elapsed_seconds();
     let x = 7.0 * s;
@@ -44,7 +44,7 @@ pub fn update(
     let rotation = Quat::from_euler(EulerRot::YXZ, x, y, z);
 
     for client in query_clients.iter() {
-        do_send_packet_evs.send(DoSendPacket {
+        do_send_packet_evs.send(DoSendPacketToClient {
             client_id: client.client_id(),
             packet: RotatePacket { rotation }.into(),
         });

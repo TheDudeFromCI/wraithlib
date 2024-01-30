@@ -1,11 +1,10 @@
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
+use bevy_wh_net::server::ServerNetworkingPlugin;
 
 use crate::server::gamestates::ServerGameStatePlugin;
-use crate::server::networking::ServerNetworkingPlugin;
 
 pub mod gamestates;
-pub mod networking;
 
 #[derive(Debug, Default)]
 pub struct ServerPlugins;

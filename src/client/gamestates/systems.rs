@@ -1,8 +1,8 @@
 use bevy::prelude::*;
+use bevy_wh_net::client::{OnDisconnectFromServer, OnJoinedServer};
 
 use crate::client::gamestates::ClientGameState;
 use crate::client::loading_screen::TransitionToState;
-use crate::client::networking::{OnDisconnectedFromServer, OnJoinedServer};
 
 pub(super) fn client_startup(mut state: ResMut<NextState<ClientGameState>>) {
     state.set(ClientGameState::Splash);
@@ -22,7 +22,7 @@ pub(super) fn open_world(
 }
 
 pub(super) fn close_world(
-    mut on_disconnect: EventReader<OnDisconnectedFromServer>,
+    mut on_disconnect: EventReader<OnDisconnectFromServer>,
     mut do_transition: EventWriter<TransitionToState>,
 ) {
     for _ in on_disconnect.read().take(1) {

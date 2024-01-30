@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 use bevy_wh_elements::assets::AssetReference;
 use bevy_wh_elements::components::{FocusableElement, RadioButtonElement, TextInput};
+use bevy_wh_net::client::DoConnectToServer;
 
 use super::*;
 use crate::client::assets::AssetsWaitForLoad;
-use crate::client::networking::DoConnectToServer;
 use crate::common::files::*;
 use crate::common::uuid::Uuid;
 
@@ -129,6 +129,7 @@ pub(super) fn join_server_button(
                 if radio.selected {
                     try_join_server_evs.send(DoConnectToServer {
                         ip: server.ip.clone(),
+                        login_data: None,
                     });
                 }
             }
