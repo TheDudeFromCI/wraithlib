@@ -10,7 +10,7 @@ bevy = { version = "0.12.1", default-features = false }
 bevy_tweening = { version = "0.9.0", optional = true }
 bevy_wh_elements = { git = "https://github.com/TheDudeFromCI/bevy_wh_elements", optional = true }
 
-bevy_wh_net = { git = "https://github.com/Wraithaven-Games/bevy_wh_net", branch = "packet_proc_macro", optional = true }
+bevy_wh_net = { git = "https://github.com/Wraithaven-Games/bevy_wh_net", optional = true }
 serde = { version = "1.0.193", optional = true }
 typetag = { version = "0.2.15", optional = true }
 
