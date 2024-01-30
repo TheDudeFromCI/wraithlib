@@ -17,9 +17,6 @@ pub mod main_menu;
 pub mod splash;
 pub mod ui;
 
-#[cfg(feature = "networking")]
-pub mod networking;
-
 #[derive(Debug, Default)]
 pub struct ClientPlugins;
 impl PluginGroup for ClientPlugins {
@@ -36,7 +33,7 @@ impl PluginGroup for ClientPlugins {
 
         #[cfg(feature = "networking")]
         {
-            use crate::client::networking::ClientNetworkingPlugin;
+            use bevy_wh_net::client::ClientNetworkingPlugin;
             group = group.add(ClientNetworkingPlugin);
         }
 

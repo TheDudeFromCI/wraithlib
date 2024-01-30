@@ -4,9 +4,6 @@ use bevy::prelude::*;
 #[cfg(feature = "files")]
 pub mod files;
 
-#[cfg(feature = "networking")]
-pub mod networking;
-
 #[cfg(feature = "uuid")]
 pub mod uuid;
 

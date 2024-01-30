@@ -1,7 +1,7 @@
 use bevy::prelude::*;
+use bevy_wh_net::client::{DoDisconnectFromServer, OnReceivePacketFromServer};
+use bevy_wh_net::common::{packet_to_client, Packet};
 use serde::{Deserialize, Serialize};
-use wraithlib::client::networking::{DoDisconnectFromServer, OnReceivePacket};
-use wraithlib::impl_packet;
 
 #[derive(Component)]
 pub struct GameObject;
@@ -9,11 +9,11 @@ pub struct GameObject;
 #[derive(Component)]
 pub struct Cube;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Packet)]
+#[packet_to_client]
 pub struct RotatePacket {
     pub rotation: Quat,
 }
-impl_packet!(to_client RotatePacket);
 
 pub fn init(
     mut query_camera: Query<&mut Transform, With<Camera>>,
@@ -69,7 +69,7 @@ pub fn cleanup(query_game_objects: Query<Entity, With<GameObject>>, mut commands
 
 pub fn update(
     mut query_cubes: Query<&mut Transform, With<Cube>>,
-    mut on_packet_evs: EventReader<OnReceivePacket>,
+    mut on_packet_evs: EventReader<OnReceivePacketFromServer>,
 ) {
     for ev in on_packet_evs.read() {
         let Some(packet) = ev.as_packet::<RotatePacket>() else {
